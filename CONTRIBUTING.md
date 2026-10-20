@@ -25,12 +25,12 @@ Partir de una copia actualizada de `main`, con el árbol de trabajo limpio:
 git status
 git switch main
 git pull --ff-only origin main
-git switch -c codex/entorno
+git switch -c feature/entorno
 ```
 
-Usar una rama por tarea: `codex/entorno`, `codex/login`, `codex/catalogo`,
-`codex/navegacion`, etc. El prefijo es una convención del repositorio y no identifica
-al autor; la autoría corresponde a la cuenta de cada integrante.
+Usar una rama por tarea: `feature/entorno`, `feature/login`, `feature/catalogo`
+o `feature/navegacion`. Para correcciones, usar `fix/descripcion`; para documentación,
+`docs/descripcion`.
 
 Durante el desarrollo:
 
@@ -42,7 +42,7 @@ Durante el desarrollo:
    ```powershell
    git add README.md docs/ENTORNO.md
    git commit -m "docs: documentar instalación del entorno"
-   git push -u origin codex/entorno
+   git push -u origin feature/entorno
    ```
 
    Adaptar archivos, mensaje y rama a la tarea real. Este ejemplo corresponde

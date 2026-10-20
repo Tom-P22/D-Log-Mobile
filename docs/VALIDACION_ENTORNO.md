@@ -1,7 +1,7 @@
 # Registro de validación inicial
 
-Fecha: 20 de octubre de 2026. Verificación desde el entorno de ejecución de Codex
-en Windows; no sustituye la incorporación de cada integrante en Android Studio.
+Fecha: 20 de octubre de 2026. Verificación por terminal en Windows;
+no sustituye la incorporación de cada integrante en Android Studio.
 
 ## Comprobado
 
@@ -44,5 +44,5 @@ No se modificaron las versiones del proyecto ni la configuración global de Wind
 
 Los tres integrantes deben seguir [ENTORNO.md](ENTORNO.md), sincronizar y ejecutar el
 proyecto desde Android Studio. Registrar resultado y evidencia en sus respectivos Issues.
-Si el fallo se reproduce fuera del entorno de Codex, revisar el JDK elegido y el log
+Si el fallo se reproduce desde Android Studio, revisar el JDK elegido y el log
 del daemon antes de cambiar Gradle, SDK o reglas de red del equipo.
