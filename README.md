@@ -86,6 +86,7 @@ Usar siempre el Wrapper del repositorio; no instalar Gradle globalmente.
 - [Ramas, commits, revisiones y acuerdos de trabajo](CONTRIBUTING.md).
 - [Tareas iniciales, responsables y dependencias](docs/PLAN_DE_TRABAJO.md).
 - [Archivos MVVM, conexión de vistas y pruebas del recorrido](docs/ESTRUCTURA_MVVM.md).
+- [Descripción de cada archivo y sus funciones](docs/GUIA_DE_ARCHIVOS.md).
 
 La planificación se llevará en GitHub Issues/Projects, conforme al acuerdo
 registrado en el plan actualizado de trabajar sin Trello. Conservar la confirmación
