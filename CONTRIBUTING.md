@@ -74,7 +74,8 @@ No aceptar actualizaciones automáticas de versiones sin acordarlas y probarlas 
 - Al menos otro integrante revisó el pull request.
 - Documentación y tarea quedan actualizadas.
 
-En esta etapa de preparación no se deben adelantar pantallas ni reglas del MVP.
+La base de pantallas y contratos está documentada en [ESTRUCTURA_MVVM.md](docs/ESTRUCTURA_MVVM.md).
+Desarrollar las reglas del MVP dentro de su Issue y coordinar los cambios a esos contratos.
 
 ## Configuración sugerida en GitHub
 

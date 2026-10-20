@@ -7,6 +7,10 @@ revisar antes de asignar los Issues.
 Todas las tareas están pendientes salvo la preparación documental local descrita abajo.
 Las plantillas del repositorio no crean Issues ni configuran GitHub automáticamente.
 
+Ya existe una [base MVVM con las seis pantallas conectadas](ESTRUCTURA_MVVM.md).
+Este recorrido provisional prepara los contratos y parte de C04, C08 y C10, pero
+no completa sus criterios: todavía faltan reglas, persistencia y verificación de ejecución.
+
 ## Etapa 0 · Entorno común
 
 | ID | Tarea | Responsable propuesto | Criterio de aceptación |

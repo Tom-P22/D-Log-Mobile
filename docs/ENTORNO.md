@@ -25,7 +25,8 @@ del equipo se propone usar el mismo emulador con API 37; eso no cambia el SDK m�
 5. Dejar que Android Studio genere `local.properties` con la ubicación local del SDK.
    Ese archivo no se comparte ni se copia desde el equipo de otra persona.
 6. Crear el dispositivo en Device Manager o conectar un teléfono con depuración USB.
-7. Ejecutar la configuración `app`. El resultado actual esperado es `Hello Android!`.
+7. Ejecutar la configuración `app`. La base actual muestra «Diseña Madera» y el botón
+   «Abrir catálogo de prueba»; consultar [ESTRUCTURA_MVVM.md](ESTRUCTURA_MVVM.md).
 
 No es necesario instalar Kotlin ni Gradle por separado. El Wrapper fija Gradle y el
 proyecto declara sus plugins. Los criterios del daemon pueden descargar un JDK 25
@@ -56,7 +57,8 @@ Compilar el APK de depuración y ejecutar las pruebas unitarias locales:
 
 APK esperado: `app/build/outputs/apk/debug/app-debug.apk`.
 Informe de pruebas: `app/build/reports/tests/testDebugUnitTest/index.html`.
-Las pruebas actuales son las de ejemplo; un resultado correcto no prueba funciones del MVP.
+Las pruebas unitarias actuales son las de ejemplo; un resultado correcto no prueba funciones del MVP.
+El recorrido base se comprueba manualmente siguiendo ESTRUCTURA_MVVM.md.
 
 Cuando exista un dispositivo disponible, ejecutar pruebas instrumentadas:
 
@@ -108,7 +110,7 @@ versiones, resultado y evidencia; no dar por validados los demás equipos a part
 - [ ] JDK 25 y SDK 37 disponibles.
 - [ ] Sincronización Gradle completada.
 - [ ] `assembleDebug` y `testDebugUnitTest` finalizan correctamente.
-- [ ] App ejecutada; se observa `Hello Android!`.
+- [ ] App ejecutada y recorrido base comprobado según ESTRUCTURA_MVVM.md.
 - [ ] Rama propia y primer pull request revisado por otro integrante.
 - [ ] Nombres, grupo y reparto de tareas completados.
 

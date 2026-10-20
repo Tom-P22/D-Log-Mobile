@@ -21,10 +21,12 @@ Diseña Madera. El nombre visible definitivo se acordará antes de personalizar 
 
 ## Estado actual
 
-Base generada con Kotlin, Jetpack Compose y Material 3. La pantalla muestra
-`Hello Android!`; el tema y las pruebas son los ejemplos iniciales de Android Studio.
-Las funcionalidades del MVP y las capas MVVM todavía no están implementadas.
-No hay credenciales de demostración disponibles aún.
+Base con Kotlin, Jetpack Compose, Material 3 y estructura MVVM. Las seis pantallas
+están conectadas mediante Navigation Compose, con una ficha sintética, favoritos
+temporales y estado compartido entre Consulta y Resumen. La entrada es un recorrido
+de prueba, sin autenticación ni validaciones; no hay credenciales demo todavía.
+La compilación de este incremento sigue pendiente de verificación en Android Studio.
+Consultar [la estructura y los pasos de prueba](docs/ESTRUCTURA_MVVM.md).
 
 ## Alcance acordado
 
@@ -71,7 +73,8 @@ la JVM 25 configurada para ejecutar Gradle.
 
 3. Abrir esa carpeta desde Android Studio y seguir [la guía de entorno](docs/ENTORNO.md).
 4. Sincronizar Gradle, seleccionar un emulador o teléfono y ejecutar `app`.
-5. Confirmar que aparece `Hello Android!` y completar el checklist de incorporación.
+5. Confirmar que aparece «Diseña Madera» con el botón «Abrir catálogo de prueba»
+   y seguir el recorrido descrito en [ESTRUCTURA_MVVM.md](docs/ESTRUCTURA_MVVM.md).
 
 Se requiere internet para la primera descarga de herramientas y dependencias.
 Usar siempre el Wrapper del repositorio; no instalar Gradle globalmente.
@@ -82,6 +85,7 @@ Usar siempre el Wrapper del repositorio; no instalar Gradle globalmente.
 - [Instalación, comandos y solución de problemas](docs/ENTORNO.md).
 - [Ramas, commits, revisiones y acuerdos de trabajo](CONTRIBUTING.md).
 - [Tareas iniciales, responsables y dependencias](docs/PLAN_DE_TRABAJO.md).
+- [Archivos MVVM, conexión de vistas y pruebas del recorrido](docs/ESTRUCTURA_MVVM.md).
 
 La planificación se llevará en GitHub Issues/Projects, conforme al acuerdo
 registrado en el plan actualizado de trabajar sin Trello. Conservar la confirmación
@@ -101,9 +105,9 @@ ui/components/  Componentes reutilizables
 ui/theme/       Tema existente
 ```
 
-Esta estructura se creará al implementar cada tarea. Las pantallas mostrarán
-estado y emitirán acciones; los ViewModels procesarán la lógica y los repositorios
-administrarán los datos. No se añadirán capas o dependencias sin una necesidad concreta.
+La estructura inicial ya existe. Las pantallas muestran estado y emiten acciones;
+los ViewModels procesan cambios y el repositorio entrega los datos de prueba.
+Cada tarea ampliará esta base con las reglas del MVP y persistencia.
 
 ## Validación y entrega
 
@@ -111,7 +115,8 @@ Los comandos de compilación y pruebas están en [ENTORNO.md](docs/ENTORNO.md).
 La [validación inicial](docs/VALIDACION_ENTORNO.md) confirmó Gradle y Java, pero la
 compilación quedó bloqueada por la conexión local del daemon; sigue pendiente
 confirmar compilación y ejecución en Android Studio en los equipos de los tres integrantes.
-Las pruebas actuales son ejemplos y no validan reglas del MVP.
+Las pruebas iniciales siguen siendo ejemplos. El recorrido provisional se comprueba
+manualmente siguiendo ESTRUCTURA_MVVM.md.
 Cada funcionalidad deberá registrar sus pasos de prueba en su pull request.
 
 Antes de entregar: actualizar funcionalidades disponibles, usuario demo y evidencias;
