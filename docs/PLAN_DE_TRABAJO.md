@@ -1,6 +1,7 @@
 # Plan de inicio y reparto
 
-La referencia funcional es la planificación actualizada de Diseña Madera. Esta tabla
+La referencia funcional es [Alcance y desarrollo del MVP](ALCANCE_DEL_PROYECTO.md),
+basado en la planificación actualizada de Diseña Madera. Esta tabla
 es una propuesta de reparto para Tomás Peña, Marcelo Salas y Fernando Villalobos, que deben
 revisar antes de asignar los Issues.
 Todas las tareas están pendientes salvo la preparación documental local descrita abajo.
@@ -21,7 +22,7 @@ Las plantillas del repositorio no crean Issues ni configuran GitHub automáticam
 Preparado localmente: README, guía de entorno, acuerdos, planificación, plantillas de
 GitHub y reglas de archivos. La validación de compilación se registra en
 [VALIDACION_ENTORNO.md](VALIDACION_ENTORNO.md); la ejecución en dispositivo se registra
-por integrante en su Issue. Este trabajo aún debe revisarse e integrarse al repositorio remoto.
+por integrante en su Issue. Cada actualización documental debe revisarse mediante PR.
 
 ## Etapa 1 · Primer código, después de validar el entorno
 
@@ -45,13 +46,37 @@ en implementación, pruebas y revisiones. Los cambios de navegación y Gradle se
 - Acordar credenciales demo al implementar login; documentarlas entonces y no usar datos reales.
 - Agregar solo dependencias necesarias para el incremento y avisar al resto del equipo.
 
-## Etapas posteriores
+## Etapas posteriores y responsables propuestos
 
-1. Detalle y recursos relacionados.
-2. Favoritos persistentes.
-3. Consulta validada y resumen con estado compartido.
-4. Cámara y galería, con vista previa y cancelaciones.
-5. Adaptabilidad, animaciones, pruebas y entrega.
+| ID | Tarea | Responsable | Depende de | Criterio de aceptación |
+| --- | --- | --- | --- | --- |
+| C06 | Detalle y recursos relacionados | Marcelo | C04 | La ficha correcta abre por ID y muestra un recurso de prueba; ID inválido permite volver |
+| C07 | Preferencias y favoritos | Tomás | C05, C06 | Se agregan y quitan favoritos desde detalle y se conservan tras reiniciar |
+| C08 | Listado de favoritos y navegación | Fernando | C07 | Lista reactiva, estado vacío y acceso a detalle funcionan |
+| C09 | Consulta validada | Fernando | C04 | Los campos inválidos muestran errores desde ViewModel y bloquean Continuar |
+| C10 | Resumen y edición de consulta | Marcelo | C09 | Comparte datos del formulario y permite regresar para editar |
+| C11 | Cámara, galería y vista previa | Tomás | C09, C10 | Ambos recursos muestran imagen; cancelar conserva estado válido |
+| C12 | Adaptación de pantallas | Marcelo | C06, C08, C10 | Se comprueban tamaño compacto y otra configuración, incluido teclado |
+| C13 | Animaciones y estados visuales | Fernando | C07, C10 | Acciones y mensajes tienen feedback coherente sin bloquear la UI |
+| C14 | Pruebas cruzadas y correcciones | Todos | C11, C12, C13 | RF01–RF12 verificados con resultados y dispositivo/API registrados |
+| C15 | Documentación y entrega | Todos | C14 | README, cuenta demo, evidencias y entrega revisados antes del cierre |
+
+El responsable implementa y registra pruebas; otro integrante revisa su PR. Estos
+responsables deben confirmarse antes de asignar los Issues.
+
+## Cronograma de referencia
+
+| Semana | Objetivo | Entregable |
+| --- | --- | --- |
+| 1 | Entorno, acuerdos y primer flujo | Incorporación de los tres, login y base de catálogo |
+| 2 | Exploración y datos locales | Búsqueda, categorías, detalle, sesión y favoritos |
+| 3 | Formularios y navegación | Consulta validada, resumen y edición |
+| 4 | Recursos y experiencia visual | Cámara, galería, adaptación y animaciones |
+| 5 | Calidad y entrega | Pruebas cruzadas, correcciones, documentación y evidencias |
+
+Las semanas son una referencia de secuencia, no fechas comprometidas. Ajustar según
+el calendario del docente y la disponibilidad del equipo; validar cada incremento
+antes de integrar el siguiente.
 
 Crear un Issue por tarea con responsable, alcance, criterios, dependencias y evidencia.
 Vincularlo al PR y moverlo por Por hacer → En curso → En revisión → Finalizado.

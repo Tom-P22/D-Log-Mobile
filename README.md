@@ -3,6 +3,9 @@
 Proyecto académico de Desarrollo de Aplicaciones Móviles (DSY1105), Unidad 2.
 El MVP permitirá explorar soluciones constructivas en madera desde Android.
 
+El problema, los usuarios, los criterios de aceptación y el enfoque de implementación
+se detallan en [Alcance y desarrollo del MVP](docs/ALCANCE_DEL_PROYECTO.md).
+
 ## Equipo
 
 | Dato | Valor |
@@ -75,6 +78,7 @@ Usar siempre el Wrapper del repositorio; no instalar Gradle globalmente.
 
 ## Organización y colaboración
 
+- [Qué construiremos y cómo lo desarrollaremos](docs/ALCANCE_DEL_PROYECTO.md).
 - [Instalación, comandos y solución de problemas](docs/ENTORNO.md).
 - [Ramas, commits, revisiones y acuerdos de trabajo](CONTRIBUTING.md).
 - [Tareas iniciales, responsables y dependencias](docs/PLAN_DE_TRABAJO.md).
