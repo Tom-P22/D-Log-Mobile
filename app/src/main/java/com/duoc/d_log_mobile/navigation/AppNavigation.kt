@@ -95,7 +95,13 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 onCorreoChange = { consultaViewModel.actualizarCorreo(it) },
                 onCategoriaChange = { consultaViewModel.actualizarCategoria(it) },
                 onDescripcionChange = { consultaViewModel.actualizarDescripcion(it) },
-                onResumen = { navController.navigate(Routes.RESUMEN) },
+                onResumen = {
+                    if (consultaViewModel.validarFormulario()) {
+                        navController.navigate(Routes.RESUMEN) {
+                            launchSingleTop = true
+                        }
+                    }
+                },
                 onVolver = { navController.popBackStack() }
             )
         }

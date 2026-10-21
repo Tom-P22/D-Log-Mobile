@@ -4,7 +4,9 @@ La referencia funcional es [Alcance y desarrollo del MVP](ALCANCE_DEL_PROYECTO.m
 basado en la planificación actualizada de Diseña Madera. Esta tabla
 es una propuesta de reparto para Tomás Peña, Marcelo Salas y Fernando Villalobos, que deben
 revisar antes de asignar los Issues.
-Todas las tareas están pendientes salvo la preparación documental local descrita abajo.
+El estado inicial y los criterios se detallan abajo. La integración del catálogo
+y la implementación de C09 tienen registros separados; las pruebas manuales
+pendientes deben completarse antes de marcar las tareas como finalizadas.
 Las plantillas del repositorio no crean Issues ni configuran GitHub automáticamente.
 
 Ya existe una [base MVVM con las seis pantallas conectadas](ESTRUCTURA_MVVM.md).
@@ -86,3 +88,10 @@ Crear un Issue por tarea con responsable, alcance, criterios, dependencias y evi
 Vincularlo al PR y moverlo por Por hacer → En curso → En revisión → Finalizado.
 La fecha límite exacta debe registrarse desde las indicaciones del docente; no se ha
 inferido una fecha a partir del cronograma de referencia.
+
+## Avance C09
+
+Implementados errores por campo y validaciones desde ConsultaViewModel. Resumen solo abre si validarFormulario() devuelve true. Compilación,
+quince pruebas unitarias (ocho de consulta) y lint sin errores verificados.
+Pendiente: comprobar interacción visual, teclado, regreso y edición en dispositivo.
+Ver [explicación y recorrido manual](CONSULTA_VALIDADA.md).

@@ -25,8 +25,9 @@ Base con Kotlin, Jetpack Compose, Material 3 y estructura MVVM. Las seis pantall
 están conectadas mediante Navigation Compose, con seis fichas sintéticas, búsqueda
 por texto y filtros de categoría, detalle, favoritos temporales y estado compartido
 entre Consulta y Resumen. La entrada es un recorrido
-de prueba, sin autenticación ni validaciones; no hay credenciales demo todavía.
-El 21 de octubre de 2026 se verificaron compilación, siete pruebas unitarias y lint
+de prueba, sin autenticación; no hay credenciales demo todavía. La consulta ya valida
+los cuatro campos desde su ViewModel y solo permite avanzar si son correctos.
+Se verificaron compilación, quince pruebas unitarias y lint
 desde terminal. La ejecución del flujo integrado en dispositivo sigue pendiente.
 Consultar [la estructura y los pasos de prueba](docs/ESTRUCTURA_MVVM.md).
 
@@ -40,7 +41,7 @@ Consultar [la estructura y los pasos de prueba](docs/ESTRUCTURA_MVVM.md).
 - Fotografía desde cámara o galería, con vista previa y manejo de cancelación.
 - Adaptabilidad y animaciones que entreguen retroalimentación.
 
-El catálogo, la búsqueda, los filtros y el detalle ya están implementados;
+El catálogo, la búsqueda, los filtros, el detalle y la consulta validada ya están implementados;
 el resto mantiene las limitaciones descritas en el estado actual.
 No se contempla backend, Firebase, autenticación remota, catálogo productivo,
 integración BIM ni publicación en tiendas. Las fichas de prueba no representan
@@ -120,8 +121,9 @@ Cada tarea ampliará esta base con las reglas del MVP y persistencia.
 Los comandos de compilación y pruebas están en [ENTORNO.md](docs/ENTORNO.md).
 La [validación inicial](docs/VALIDACION_ENTORNO.md) conserva el bloqueo histórico
 del daemon. La [integración del catálogo](docs/INTEGRACION_CATALOGO.md) registra
-la compilación y las pruebas exitosas del 21 de octubre de 2026.
-Las pruebas incluyen seis casos del catálogo y favoritos, además del ejemplo inicial.
+la compilación y las pruebas exitosas de la integración.
+Las pruebas incluyen seis casos del catálogo y favoritos, ocho de consulta y el ejemplo inicial.
+Ver [consulta validada y explicación del código](docs/CONSULTA_VALIDADA.md).
 El recorrido visual debe comprobarse manualmente siguiendo ESTRUCTURA_MVVM.md.
 Cada funcionalidad deberá registrar sus pasos de prueba en su pull request.
 

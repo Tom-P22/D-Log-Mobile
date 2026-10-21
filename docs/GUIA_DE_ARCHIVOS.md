@@ -92,7 +92,13 @@ esos datos deberán incorporarse al implementar el login.
 
 Contiene `nombre`, `correo`, `categoria` y `descripcion`, todos inicialmente vacíos.
 Consulta muestra campos editables y Resumen muestra esos mismos datos.
-El estado no incluye todavía errores de validación ni fotografía.
+Incluye `errores: ConsultaErrores` con un mensaje opcional por campo.
+No incluye todavía fotografía.
+
+### `model/ConsultaErrores.kt`
+
+Contiene `nombre`, `correo`, `categoria` y `descripcion` como `String?`.
+`null` significa que el campo no tiene un error pendiente de mostrar.
 
 ## 4. Datos: carpeta `repository/`
 
@@ -155,9 +161,10 @@ Administra una instancia de `ConsultaUiState` compartida por Consulta y Resumen.
 - `actualizarDescripcion(valor)`: cambia la descripción.
 - `limpiarConsulta()`: vuelve a dejar todos los campos vacíos.
 
-Modificar un campo conserva los demás mediante `copy()`. Actualmente no se valida
-el contenido ni se envía información. Las validaciones deben agregarse aquí, en lugar
-de escribirlas dentro de los campos de la pantalla.
+Modificar un campo conserva los demás mediante `copy()` y limpia solo su error.
+`validarFormulario()` comprueba los campos obligatorios, el formato básico del correo
+y la descripción de al menos diez caracteres. Guarda los errores y devuelve un Boolean.
+AppNavigation abre Resumen solo si devuelve true. No se envía información.
 
 ## 6. Navegación: carpeta `navigation/`
 
@@ -250,9 +257,10 @@ También permite volver a la pantalla anterior.
 Muestra cuatro `OutlinedTextField`: nombre, correo, categoría y descripción.
 Cada campo utiliza el valor de `ConsultaUiState` y llama a su función de actualización.
 
-«Ver resumen de prueba» llama a `onResumen`; «Volver» llama a `onVolver`.
-Actualmente la categoría se escribe como texto libre. Faltan selección de categoría,
-errores por campo, validaciones, cámara y galería. No se envía una consulta.
+«Ver resumen» llama a `onResumen`; «Volver» llama a `onVolver`.
+Los errores se muestran con `isError`, `supportingText` e icono local `ic_error.xml`.
+La categoría sigue siendo texto libre y obligatorio. Faltan cámara y galería.
+Hay previews del formulario inicial y con errores en un ancho de 320 dp.
 
 ### `ui/screens/ResumenScreen.kt`
 
@@ -346,6 +354,7 @@ El nivel Java de compilación del módulo y la JVM que ejecuta Gradle son config
 
 | Ruta | Qué prueba actualmente |
 | --- | --- |
+| `app/src/test/java/com/duoc/d_log_mobile/ConsultaViewModelTest.kt` | Ocho pruebas: campos vacíos, espacios, correo inválido, mínimo de descripción, datos válidos, limpieza de errores, corrección y reinicio |
 | `app/src/test/java/com/duoc/d_log_mobile/SolucionViewModelTest.kt` | Comprueba seis fichas e IDs únicos, búsqueda y categorías combinadas, recuperación del catálogo, favoritos ocultos por filtros, limpieza e IDs inexistentes |
 | `app/src/test/java/com/duoc/d_log_mobile/ExampleUnitTest.kt` | Ejecuta addition_isCorrect, que comprueba 2 + 2 = 4; es un ejemplo local sin emulador |
 | `app/src/androidTest/java/com/duoc/d_log_mobile/ExampleInstrumentedTest.kt` | Ejecuta useAppContext en dispositivo/emulador y comprueba el identificador com.duoc.d_log_mobile |
@@ -433,6 +442,7 @@ cambia de destino. Mantener esa separación es la regla para extender la base.
 | Guardar sesión y favoritos | Crear el repositorio de preferencias y conectarlo con los ViewModels correspondientes |
 | Agregar cámara y galería | Ampliar estado y pantalla de consulta, preparar FileProvider y revisar manifest/recursos |
 
-Persistencia, validaciones y fotografías siguen pendientes. El catálogo de seis
+Persistencia, validaciones de login y fotografías siguen pendientes. La consulta
+ya tiene validaciones; ver CONSULTA_VALIDADA.md. El catálogo de seis
 fichas, búsqueda, categorías y detalle ya se integró; ver INTEGRACION_CATALOGO.md.
 Las responsabilidades futuras de esta tabla no describen funciones ya implementadas.

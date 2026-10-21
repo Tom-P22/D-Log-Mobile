@@ -9,13 +9,14 @@ com.duoc.d_log_mobile/
     Solucion.kt                    Contrato de una ficha
     SolucionUiState.kt             Fichas, búsqueda, categoría y favoritos temporales
     LoginUiState.kt                Estado inicial del login
-    ConsultaUiState.kt             Datos del formulario
+    ConsultaUiState.kt             Datos y errores del formulario
+    ConsultaErrores.kt             Mensajes por campo
   repository/
     SolucionRepository.kt          Seis fichas sintéticas para el catálogo
   viewmodel/
     LoginViewModel.kt              Actualiza el correo de prueba
     SolucionViewModel.kt           Entrega fichas y cambia favoritos temporales
-    ConsultaViewModel.kt           Actualiza los campos compartidos
+    ConsultaViewModel.kt           Actualiza y valida los campos compartidos
   navigation/
     Routes.kt                     Nombres de rutas y argumento del detalle
     AppNavigation.kt              NavHost, ViewModels y callbacks
@@ -29,7 +30,7 @@ Las vistas reciben datos y funciones; no conocen el repositorio ni el NavControl
 Los ViewModels exponen StateFlow de solo lectura y procesan cambios. AppNavigation
 observa el estado con `collectAsState` y conecta las acciones con los destinos.
 
-La base usa los conceptos de las guías 7 a 11: paquetes MVVM, composables,
+La base usa paquetes MVVM, composables,
 NavHost/NavController, data class, StateFlow y ViewModel compartido. Hay un solo
 NavHost con seis destinos y una instancia de cada ViewModel, creada con `viewModel()`.
 El repositorio es una clase con una lista local. Se mantienen funciones cortas y
@@ -54,8 +55,9 @@ destinos que deben compartir estado. Mantener la creación y su alcance en AppNa
 
 El botón «Abrir catálogo de prueba» permite recorrer pantallas sin autenticación.
 El catálogo tiene seis fichas, búsqueda por texto y filtros combinables por categoría.
-No existe aún cuenta demo, clave, validación, sesión persistente, fotografía ni DataStore. Los favoritos son temporales.
-El formulario permite pasar al resumen sin validar y no envía datos.
+No existe aún cuenta demo, clave, validación de login, sesión persistente, fotografía ni DataStore. Los favoritos son temporales.
+El formulario valida nombre, correo, categoría y descripción antes de abrir el resumen.
+La información permanece en memoria y no se envía.
 
 La finalidad de este incremento es preparar archivos y conexiones. Cada responsable
 debe extender los contratos existentes y su ViewModel, sin duplicar las pantallas ni
@@ -92,8 +94,8 @@ Para esta primera base, comprobar manualmente los pasos anteriores en el emulado
 Se conservan las pruebas de ejemplo y se agregan seis pruebas de catálogo,
 filtros y favoritos temporales en SolucionViewModelTest.
 
-El 21 de octubre de 2026 se completaron desde terminal `assembleDebug`,
-`testDebugUnitTest` y `lintDebug`: APK generado, siete pruebas sin fallos y lint
+Se completaron desde terminal `assembleDebug`,
+`testDebugUnitTest` y `lintDebug`: APK generado, quince pruebas sin fallos y lint
 sin errores (once advertencias). Las pruebas instrumentadas y el recorrido visual
 no se han ejecutado. Ver [registro de integración](INTEGRACION_CATALOGO.md).
 

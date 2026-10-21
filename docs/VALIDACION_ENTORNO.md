@@ -1,6 +1,6 @@
 # Registro de validación inicial
 
-Fecha: 20 de octubre de 2026. Verificación por terminal en Windows;
+Verificación por terminal en Windows;
 no sustituye la incorporación de cada integrante en Android Studio.
 
 ## Comprobado

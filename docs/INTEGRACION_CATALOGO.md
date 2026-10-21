@@ -1,7 +1,5 @@
 # Integración del catálogo en dev
 
-Fecha: 21 de octubre de 2026.
-
 ## Origen y decisiones
 
 La rama `feature/C01-modelo-catalogo`, hasta `b957051`, partía del primer commit.
@@ -19,8 +17,7 @@ sin commit para conservar los cuatro commits originales de Marcelo al confirmarl
   de misc.xml queda fuera de los cambios preparados para el commit.
 - CONTRIBUTING ahora indica ramas y PR hacia dev; main queda para la versión final verificada.
 
-Referencias académicas: guías 7 (MVVM), 8 (Compose), 10 (navegación) y
-11 (estado compartido). No se agregaron librerías ni se cambiaron versiones.
+No se agregaron librerías ni se cambiaron versiones.
 
 ## Verificación ejecutada
 
