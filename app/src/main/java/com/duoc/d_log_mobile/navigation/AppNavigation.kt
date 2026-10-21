@@ -50,6 +50,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         composable(Routes.HOME) {
             HomeScreen(
                 state = solucionState,
+                onBusquedaChange = { solucionViewModel.actualizarBusqueda(it) },
+                onCategoriaSelect = { solucionViewModel.seleccionarCategoria(it) },
                 onDetalle = { navController.navigate(Routes.detalle(it)) },
                 onFavoritos = { navController.navigate(Routes.FAVORITOS) },
                 onConsulta = {

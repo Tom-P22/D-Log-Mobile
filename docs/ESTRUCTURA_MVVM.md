@@ -7,11 +7,11 @@ com.duoc.d_log_mobile/
   MainActivity.kt                  Tema, Scaffold y entrada a AppNavigation
   model/
     Solucion.kt                    Contrato de una ficha
-    SolucionUiState.kt             Fichas y favoritos temporales
+    SolucionUiState.kt             Fichas, búsqueda, categoría y favoritos temporales
     LoginUiState.kt                Estado inicial del login
     ConsultaUiState.kt             Datos del formulario
   repository/
-    SolucionRepository.kt          Una ficha sintética para probar conexiones
+    SolucionRepository.kt          Seis fichas sintéticas para el catálogo
   viewmodel/
     LoginViewModel.kt              Actualiza el correo de prueba
     SolucionViewModel.kt           Entrega fichas y cambia favoritos temporales
@@ -53,8 +53,8 @@ destinos que deben compartir estado. Mantener la creación y su alcance en AppNa
 ## Límites de esta base
 
 El botón «Abrir catálogo de prueba» permite recorrer pantallas sin autenticación.
-No existe aún cuenta demo, clave, validación, sesión persistente, búsqueda, filtros,
-catálogo de seis fichas, fotografía ni DataStore. Los favoritos son temporales.
+El catálogo tiene seis fichas, búsqueda por texto y filtros combinables por categoría.
+No existe aún cuenta demo, clave, validación, sesión persistente, fotografía ni DataStore. Los favoritos son temporales.
 El formulario permite pasar al resumen sin validar y no envía datos.
 
 La finalidad de este incremento es preparar archivos y conexiones. Cada responsable
@@ -80,20 +80,22 @@ desarrollar cada tarea. No modificar las rutas compartidas sin avisar al resto.
 
 1. Sincronizar Gradle para descargar Navigation Compose y las integraciones de Lifecycle.
 2. Ejecutar `app` en el emulador.
-3. Abrir catálogo de prueba → Tabique de ejemplo → agregar favorito → volver → Favoritos.
+3. Abrir catálogo de prueba → seleccionar una de las seis fichas → agregar favorito → volver → Favoritos.
+   Buscar «muro», combinar con «Muros» y luego con «Pisos» para comprobar el estado vacío.
+   Limpiar la búsqueda y seleccionar «Todas» para recuperar las seis fichas.
 4. Volver al catálogo → Nueva consulta → escribir campos → ver resumen → editar.
 5. Finalizar → Nueva consulta: los campos deben estar vacíos.
 6. Salir del recorrido → volver a entrar → Favoritos: el listado debe estar vacío.
 7. Comprobar también el regreso con el botón Atrás del sistema.
 
 Para esta primera base, comprobar manualmente los pasos anteriores en el emulador.
-Se conservan las pruebas de ejemplo que ya traía el proyecto.
+Se conservan las pruebas de ejemplo y se agregan seis pruebas de catálogo,
+filtros y favoritos temporales en SolucionViewModelTest.
 
-La compilación, las pruebas unitarias y lint se intentaron desde terminal con
-`assembleDebug testDebugUnitTest lintDebug`. Gradle se detuvo con
-`Unable to establish loopback connection` antes de compilar. Las pruebas instrumentadas
-no se han ejecutado; deben comprobarse desde Android Studio. Esto no confirma que el
-nuevo código compile ni que las pruebas pasen.
+El 21 de octubre de 2026 se completaron desde terminal `assembleDebug`,
+`testDebugUnitTest` y `lintDebug`: APK generado, siete pruebas sin fallos y lint
+sin errores (once advertencias). Las pruebas instrumentadas y el recorrido visual
+no se han ejecutado. Ver [registro de integración](INTEGRACION_CATALOGO.md).
 
 ## Referencias técnicas
 

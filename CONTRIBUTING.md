@@ -19,12 +19,12 @@ Cada integrante usa su cuenta y realiza sus propios commits. No compartir creden
 
 ## Flujo por tarea
 
-Partir de una copia actualizada de `main`, con el árbol de trabajo limpio:
+Partir de una copia actualizada de `dev`, con el árbol de trabajo limpio:
 
 ```powershell
 git status
-git switch main
-git pull --ff-only origin main
+git switch dev
+git pull --ff-only origin dev
 git switch -c feature/entorno
 ```
 
@@ -48,15 +48,18 @@ Durante el desarrollo:
    Adaptar archivos, mensaje y rama a la tarea real. Este ejemplo corresponde
    a una tarea de documentación del entorno.
 
-5. Abrir un pull request hacia `main`, enlazar el Issue con `Closes #numero` y
+5. Abrir un pull request hacia `dev`, enlazar el Issue con `Closes #numero` y
    completar la plantilla. Otro integrante revisa y prueba el cambio.
 6. Integrar después de resolver observaciones y comprobar que compila.
-7. Actualizar el Issue y la planificación; cada integrante actualiza su `main` antes de otra tarea.
+7. Actualizar el Issue y la planificación; cada integrante actualiza su `dev` antes de otra tarea.
 
 No cambiar de rama con trabajo pendiente ni usar comandos destructivos para resolver
 conflictos. Si dos tareas necesitan el mismo archivo, acordar quién lo modifica primero.
-Para sincronizar una rama compartida, se puede integrar `origin/main` con un merge;
+Para sincronizar una rama compartida, se puede integrar `origin/dev` con un merge;
 evitar reescribir el historial que ya usan otros integrantes.
+
+Las funcionalidades se integran y prueban en `dev`. Cuando el equipo tenga una
+version completa y verificada, se abre un PR de `dev` hacia `main` para la entrega.
 
 ## Archivos compartidos
 

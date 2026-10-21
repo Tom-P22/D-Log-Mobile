@@ -78,7 +78,9 @@ Describe el estado que comparten Catálogo, Detalle y Favoritos:
   IDs están en `favoritos`.
 
 La lista de favoritos se obtiene a partir de los datos actuales; no existe una segunda
-lista independiente que haya que actualizar a mano. Todavía no incluye búsqueda ni filtros.
+lista independiente que haya que actualizar a mano. `busquedaTexto` y
+`categoriaSeleccionada` guardan los criterios; `solucionesFiltradas` combina ambos.
+La búsqueda ignora mayúsculas y revisa nombre y descripción.
 
 ### `model/LoginUiState.kt`
 
@@ -97,8 +99,8 @@ El estado no incluye todavía errores de validación ni fotografía.
 ### `repository/SolucionRepository.kt`
 
 Separa el origen de los datos de las pantallas.
-`obtenerSoluciones()` devuelve una lista con una sola ficha sintética, identificada
-como `muro-demo`, para probar la navegación por ID.
+`obtenerSoluciones()` devuelve seis fichas sintéticas con IDs estables.
+`obtenerSolucionPorId(id)` devuelve la ficha solicitada o `null`.
 
 `SolucionViewModel` consulta este repositorio; las pantallas no lo consultan directamente.
 Para ampliar el catálogo se agregarán fichas aquí. No hay conexión a internet,
@@ -131,7 +133,8 @@ un recorrido de prueba.
 ### `viewmodel/SolucionViewModel.kt`
 
 Obtiene las fichas desde `SolucionRepository` al crear su estado y administra los
-favoritos temporales.
+favoritos temporales. También actualiza búsqueda y categoría mediante
+`actualizarBusqueda(texto)` y `seleccionarCategoria(categoria)`.
 
 - `obtenerSolucion(id)`: busca una ficha y devuelve `null` si no existe.
 - `alternarFavorito(id)`: comprueba que la ficha exista; si ya está marcada la quita,
@@ -216,14 +219,12 @@ Todavía permite entrar sin validar datos. No debe presentarse como login termin
 
 ### `ui/screens/HomeScreen.kt`
 
-Muestra el catálogo provisional. Recorre `state.soluciones` y crea un botón por ficha;
-cada uno comunica su ID mediante `onDetalle`.
+Muestra un buscador, categorías y tarjetas de `state.solucionesFiltradas`.
+Cada tarjeta comunica su ID mediante `onDetalle`.
 
 Incluye accesos a Favoritos, Nueva consulta y Salir. Si la lista está vacía, muestra
-un mensaje. Todavía no contiene tarjetas definitivas, buscador ni filtro por categoría.
-
-`HomeScreenPreview()` permite previsualizar esta pantalla con un estado vacío y
-acciones sin efecto; la preview no ejecuta el recorrido de navegación completo.
+el mensaje «No se encontraron soluciones». El buscador y las categorías envían
+acciones al ViewModel mediante los callbacks conectados en AppNavigation.
 
 ### `ui/screens/DetalleScreen.kt`
 
@@ -345,6 +346,7 @@ El nivel Java de compilación del módulo y la JVM que ejecuta Gradle son config
 
 | Ruta | Qué prueba actualmente |
 | --- | --- |
+| `app/src/test/java/com/duoc/d_log_mobile/SolucionViewModelTest.kt` | Comprueba seis fichas e IDs únicos, búsqueda y categorías combinadas, recuperación del catálogo, favoritos ocultos por filtros, limpieza e IDs inexistentes |
 | `app/src/test/java/com/duoc/d_log_mobile/ExampleUnitTest.kt` | Ejecuta addition_isCorrect, que comprueba 2 + 2 = 4; es un ejemplo local sin emulador |
 | `app/src/androidTest/java/com/duoc/d_log_mobile/ExampleInstrumentedTest.kt` | Ejecuta useAppContext en dispositivo/emulador y comprueba el identificador com.duoc.d_log_mobile |
 
@@ -431,5 +433,6 @@ cambia de destino. Mantener esa separación es la regla para extender la base.
 | Guardar sesión y favoritos | Crear el repositorio de preferencias y conectarlo con los ViewModels correspondientes |
 | Agregar cámara y galería | Ampliar estado y pantalla de consulta, preparar FileProvider y revisar manifest/recursos |
 
-Persistencia, validaciones, catálogo completo y fotografías siguen pendientes.
+Persistencia, validaciones y fotografías siguen pendientes. El catálogo de seis
+fichas, búsqueda, categorías y detalle ya se integró; ver INTEGRACION_CATALOGO.md.
 Las responsabilidades futuras de esta tabla no describen funciones ya implementadas.

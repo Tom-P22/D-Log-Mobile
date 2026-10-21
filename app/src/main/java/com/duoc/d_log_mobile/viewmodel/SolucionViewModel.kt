@@ -5,33 +5,47 @@ import com.duoc.d_log_mobile.model.Solucion
 import com.duoc.d_log_mobile.model.SolucionUiState
 import com.duoc.d_log_mobile.repository.SolucionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
-class SolucionViewModel : ViewModel() {
-    private val repository = SolucionRepository()
-    private val _uiState = MutableStateFlow(
-        SolucionUiState(soluciones = repository.obtenerSoluciones())
-    )
-    val uiState = _uiState.asStateFlow()
+class SolucionViewModel(
+    private val repository: SolucionRepository = SolucionRepository()
+) : ViewModel() {
 
-    // Estado temporal para comprobar la conexión Detalle → Favoritos.
-    // La persistencia se implementará mediante un repositorio de preferencias.
-    fun alternarFavorito(id: String) {
-        val estado = _uiState.value
-        if (obtenerSolucion(id) == null) return
+    private val _uiState = MutableStateFlow(SolucionUiState())
+    val uiState: StateFlow<SolucionUiState> = _uiState.asStateFlow()
 
-        if (id in estado.favoritos) {
-            _uiState.value = estado.copy(favoritos = estado.favoritos - id)
-        } else {
-            _uiState.value = estado.copy(favoritos = estado.favoritos + id)
-        }
+    init {
+        _uiState.update { it.copy(soluciones = repository.obtenerSoluciones()) }
+    }
+
+    fun actualizarBusqueda(texto: String) {
+        _uiState.update { it.copy(busquedaTexto = texto) }
+    }
+
+    fun seleccionarCategoria(categoria: String) {
+        _uiState.update { it.copy(categoriaSeleccionada = categoria) }
     }
 
     fun obtenerSolucion(id: String): Solucion? {
-        return _uiState.value.soluciones.find { it.id == id }
+        return repository.obtenerSolucionPorId(id)
+    }
+
+    fun alternarFavorito(id: String) {
+        if (obtenerSolucion(id) == null) return
+        _uiState.update { estado ->
+            val nuevosFavoritos = estado.favoritos.toMutableSet()
+            if (nuevosFavoritos.contains(id)) {
+                nuevosFavoritos.remove(id)
+            } else {
+                nuevosFavoritos.add(id)
+            }
+            estado.copy(favoritos = nuevosFavoritos)
+        }
     }
 
     fun limpiarFavoritos() {
-        _uiState.value = _uiState.value.copy(favoritos = emptySet())
+        _uiState.update { it.copy(favoritos = emptySet()) }
     }
 }
