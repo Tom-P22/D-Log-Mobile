@@ -1,5 +1,7 @@
 package com.duoc.d_log_mobile.navigation
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -7,10 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.activity.compose.LocalActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.duoc.d_log_mobile.repository.PreferenciasRepository
@@ -19,10 +24,27 @@ import com.duoc.d_log_mobile.viewmodel.ConsultaViewModel
 import com.duoc.d_log_mobile.viewmodel.LoginViewModel
 import com.duoc.d_log_mobile.viewmodel.SolucionViewModel
 
+private fun NavController.volverSeguro(destinoSeguro: String = Routes.HOME) {
+    if (previousBackStackEntry != null) {
+        popBackStack()
+    } else {
+        navigate(destinoSeguro) {
+            launchSingleTop = true
+            popUpTo(graph.startDestinationId) {
+                inclusive = false
+            }
+        }
+    }
+}
+
 @Composable
-fun AppNavigation(modifier: Modifier = Modifier) {
-    val contexto = LocalContext.current.applicationContext
-    val preferencias = remember { PreferenciasRepository(contexto) }
+fun AppNavigation(
+    mostrarSplashInicial: Boolean = true,
+    modifier: Modifier = Modifier
+) {
+    val activity = LocalActivity.current
+    val appContext = LocalContext.current.applicationContext
+    val preferencias = remember { PreferenciasRepository(appContext) }
     val loginViewModel: LoginViewModel = viewModel { LoginViewModel(preferencias) }
     val solucionViewModel: SolucionViewModel = viewModel { SolucionViewModel(preferencias = preferencias) }
     val consultaViewModel: ConsultaViewModel = viewModel()
@@ -31,9 +53,18 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     val consultaState by consultaViewModel.uiState.collectAsState()
     val sesion = loginState.sesionIniciada
 
-    // Se espera a leer DataStore antes de elegir la pantalla inicial.
+    // Solo true en arranque en frío (savedInstanceState == null).
+    // Así al volver de la cámara no se muestra de nuevo el splash ni parece que la app reinicia.
+    var mostrarSplash by remember { mutableStateOf(mostrarSplashInicial) }
+    if (mostrarSplash) {
+        SplashScreen(onTerminado = { mostrarSplash = false }, modifier = modifier)
+        return
+    }
+
     if (sesion == null) {
-        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
         return
     }
     LaunchedEffect(sesion) {
@@ -43,10 +74,24 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         }
     }
 
-    // Al entrar o salir se crea una pila nueva: Atrás no recupera una sesión cerrada.
     key(sesion) {
         val navController = rememberNavController()
-        NavHost(navController, startDestination = if (sesion) Routes.HOME else Routes.LOGIN, modifier = modifier) {
+        val destinoBase = if (sesion) Routes.HOME else Routes.LOGIN
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val rutaActual = backStackEntry?.destination?.route
+
+        val enRaiz = rutaActual == null ||
+                rutaActual == Routes.HOME ||
+                rutaActual == Routes.LOGIN
+        BackHandler(enabled = enRaiz) {
+            activity?.finish()
+        }
+
+        NavHost(
+            navController = navController,
+            startDestination = destinoBase,
+            modifier = modifier
+        ) {
             composable(Routes.LOGIN) {
                 LoginScreen(
                     state = loginState,
@@ -60,8 +105,12 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     state = solucionState,
                     onBusquedaChange = { solucionViewModel.actualizarBusqueda(it) },
                     onCategoriaSelect = { solucionViewModel.seleccionarCategoria(it) },
-                    onDetalle = { navController.navigate(Routes.detalle(it)) { launchSingleTop = true } },
-                    onFavoritos = { navController.navigate(Routes.FAVORITOS) { launchSingleTop = true } },
+                    onDetalle = {
+                        navController.navigate(Routes.detalle(it)) { launchSingleTop = true }
+                    },
+                    onFavoritos = {
+                        navController.navigate(Routes.FAVORITOS) { launchSingleTop = true }
+                    },
                     onConsulta = {
                         consultaViewModel.limpiarConsulta()
                         navController.navigate(Routes.CONSULTA) { launchSingleTop = true }
@@ -72,7 +121,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 )
             }
             composable(
-                Routes.DETALLE,
+                route = Routes.DETALLE,
                 arguments = listOf(navArgument(Routes.SOLUCION_ID) { type = NavType.StringType })
             ) { entry ->
                 val id = entry.arguments?.getString(Routes.SOLUCION_ID).orEmpty()
@@ -80,16 +129,18 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     solucion = solucionViewModel.obtenerSolucion(id),
                     esFavorita = id in solucionState.favoritos,
                     onFavorito = { solucionViewModel.alternarFavorito(id) },
-                    onVolver = { navController.popBackStack() },
+                    onVolver = { navController.volverSeguro(Routes.HOME) },
                     guardando = solucionState.guardandoFavorito || solucionState.cargando,
-                    mensaje = solucionState.mensajeParaSolucion(id)
+                    mensaje = solucionState.mensaje
                 )
             }
             composable(Routes.FAVORITOS) {
                 FavoritosScreen(
                     soluciones = solucionState.solucionesFavoritas,
-                    onDetalle = { navController.navigate(Routes.detalle(it)) { launchSingleTop = true } },
-                    onVolver = { navController.popBackStack() },
+                    onDetalle = {
+                        navController.navigate(Routes.detalle(it)) { launchSingleTop = true }
+                    },
+                    onVolver = { navController.volverSeguro(Routes.HOME) },
                     cargando = solucionState.cargando
                 )
             }
@@ -105,7 +156,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                             navController.navigate(Routes.RESUMEN) { launchSingleTop = true }
                         }
                     },
-                    onVolver = { navController.popBackStack() },
+                    onVolver = { navController.volverSeguro(Routes.HOME) },
                     onImagenChange = { consultaViewModel.actualizarImagen(it) },
                     onPrepararFoto = { consultaViewModel.prepararFoto(it) },
                     onRecibirFoto = { consultaViewModel.recibirFoto(it) },
@@ -115,10 +166,17 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             composable(Routes.RESUMEN) {
                 ResumenScreen(
                     state = consultaState,
-                    onEditar = { navController.popBackStack() },
+                    onEditar = {
+                        if (!navController.popBackStack(Routes.CONSULTA, inclusive = false)) {
+                            navController.navigate(Routes.CONSULTA) { launchSingleTop = true }
+                        }
+                    },
                     onFinalizar = {
                         consultaViewModel.limpiarConsulta()
-                        navController.popBackStack(Routes.HOME, inclusive = false)
+                        navController.navigate(Routes.HOME) {
+                            launchSingleTop = true
+                            popUpTo(Routes.HOME) { inclusive = true }
+                        }
                     }
                 )
             }
