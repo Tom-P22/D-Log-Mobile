@@ -13,21 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-
-# Kotlin caches and local editor settings
-.kotlin/
-.idea/
-.vscode/
-
-# Local credentials and signing files
-.env
-.env.*
-!.env.example
-*.jks
-*.keystore
-keystore.properties
-
-# Local exports and temporary artifacts
-*.apk
-*.aab
-*.log
