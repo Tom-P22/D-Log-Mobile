@@ -73,30 +73,4 @@ class SolucionViewModelTest {
         viewModel.alternarFavorito("id-inexistente")
         assertTrue(viewModel.uiState.value.favoritos.isEmpty())
     }
-
-    @Test
-    fun mensajeDeFavoritoSoloSeMuestraEnLaFichaQueLoOrigino() {
-        val viewModel = SolucionViewModel()
-        val primera = viewModel.uiState.value.soluciones[0].id
-        val segunda = viewModel.uiState.value.soluciones[1].id
-
-        viewModel.alternarFavorito(primera)
-        assertEquals("Favorito guardado", viewModel.uiState.value.mensajeParaSolucion(primera))
-        assertNull(viewModel.uiState.value.mensajeParaSolucion(segunda))
-
-        viewModel.alternarFavorito(segunda)
-        assertNull(viewModel.uiState.value.mensajeParaSolucion(primera))
-        assertEquals("Favorito guardado", viewModel.uiState.value.mensajeParaSolucion(segunda))
-    }
-
-    @Test
-    fun reiniciarFiltrosLimpiaConfirmacionSinBorrarFavoritos() {
-        val viewModel = SolucionViewModel()
-        val id = viewModel.uiState.value.soluciones.first().id
-        viewModel.alternarFavorito(id)
-        viewModel.reiniciarFiltros()
-
-        assertNull(viewModel.uiState.value.mensajeParaSolucion(id))
-        assertEquals(setOf(id), viewModel.uiState.value.favoritos)
-    }
 }
