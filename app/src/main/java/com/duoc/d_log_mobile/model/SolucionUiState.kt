@@ -10,13 +10,8 @@ data class SolucionUiState(
     val favoritos: Set<String> = emptySet(),
     val cargando: Boolean = false,
     val guardandoFavorito: Boolean = false,
-    val mensaje: String? = null,
-    val mensajeSolucionId: String? = null
+    val mensaje: String? = null
 ) {
-    fun mensajeParaSolucion(id: String): String? {
-        return if (mensajeSolucionId == id) mensaje else null
-    }
-
     /**
      * Lista filtrada según el texto ingresado y la categoría elegida.
      */
