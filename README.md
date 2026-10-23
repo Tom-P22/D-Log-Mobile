@@ -62,6 +62,20 @@ propias, inyección de dependencias ni capas adicionales.
 Se conserva la configuración base: AGP 9.4.1, Gradle 9.6.0, Java 25 para el daemon,
 Compose BOM 2026.02.01 y SDK de compilación/destino 37.
 
+## Dónde se aplica cada función
+
+| Funcionalidad | Archivos principales |
+| --- | --- |
+| Login y sesión | LoginScreen, LoginUiState, LoginViewModel y PreferenciasRepository |
+| Catálogo y favoritos | HomeScreen, DetalleScreen, FavoritosScreen, SolucionViewModel y PreferenciasRepository |
+| Consulta y resumen | ConsultaScreen, ResumenScreen, ConsultaUiState y ConsultaViewModel |
+| Cámara y galería | ConsultaScreen, ImagenUtils, ImagenConsulta, FileProvider y file_paths.xml |
+| Animaciones y carga | LoginScreen, ConsultaScreen, DetalleScreen y sus estados de ViewModel |
+| Adaptación y teclado | WindowSizeUtils, PantallaBase, HomeScreen, LoginScreen y MainActivity |
+
+Consultar [funciones de cada archivo](docs/GUIA_DE_ARCHIVOS.md) y
+[recorridos entre pantallas y capas](docs/ESTRUCTURA_MVVM.md).
+
 ## Pruebas
 
 ```powershell
@@ -84,8 +98,9 @@ recorrido de comprobación en [PRUEBAS.md](docs/PRUEBAS.md).
 - La app usa cámara y selector externos. Solo comparte la carpeta temporal mediante
   FileProvider; no solicita acceso general al almacenamiento ni permiso directo de cámara.
 - Las fichas e imágenes son ejemplos, no prestaciones certificadas ni documentación oficial.
-- Antes de entregar, completar el grupo y las evidencias, revisar el acceso del docente
-  y comprobar cámara/galería en un teléfono real.
+- El equipo confirmó ejecución manual en un POCO X5 Pro con HyperOS. Antes de
+  entregar, completar el grupo, las evidencias y el registro por función en teléfono
+  real, además de revisar el acceso del docente.
 
 El trabajo se integra en dev. Main recibe la versión verificada mediante PR.
 Los commits y el push los realiza cada integrante con su cuenta.

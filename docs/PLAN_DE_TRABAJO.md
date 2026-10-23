@@ -95,7 +95,7 @@ inferido una fecha a partir del cronograma de referencia.
 | C11 | Cámara, galería, vista previa y cancelación implementadas |
 | C12 | Window Size Classes, ancho máximo, scroll y teclado |
 | C13 | Color animado de favoritos, mensajes e indicadores de carga |
-| C14 | Pruebas locales y del emulador; falta comprobación final en teléfono real |
+| C14 | Pruebas locales y del emulador aprobadas; ejecución manual confirmada en POCO X5 Pro con HyperOS; completar registro por función |
 | C15 | Documentación actualizada; completar número de grupo y evidencias del equipo |
 
 Ver [resultados y recorrido de prueba](PRUEBAS.md).

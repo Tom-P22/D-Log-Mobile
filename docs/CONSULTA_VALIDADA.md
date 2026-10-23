@@ -1,18 +1,22 @@
-# C09 — Consulta validada
+# Consulta validada e imagen de referencia
 
 ## Archivos y responsabilidades
 
 | Archivo | Responsabilidad |
 | --- | --- |
-| model/ConsultaUiState.kt | Guarda los cuatro campos y sus errores |
+| model/ConsultaUiState.kt | Guarda los cuatro campos, errores, imagen seleccionada y captura pendiente |
 | model/ConsultaErrores.kt | Un mensaje de error opcional por campo |
-| viewmodel/ConsultaViewModel.kt | Actualiza datos, limpia errores y valida el formulario |
-| ui/screens/ConsultaScreen.kt | Dibuja campos, mensajes e iconos; no valida |
+| viewmodel/ConsultaViewModel.kt | Actualiza campos e imagen, valida y recibe el resultado de cámara |
+| ui/screens/ConsultaScreen.kt | Dibuja campos, errores, botones de cámara/galería y vista previa |
 | navigation/AppNavigation.kt | Valida antes de navegar; comparte el ViewModel con Resumen |
-| res/drawable/ic_error.xml | Icono local reutilizado cuando hay error, sin librerías extra |
+| ui/components/ImagenConsulta.kt | Muestra una copia reducida de la imagen seleccionada |
+| ui/utils/ImagenUtils.kt | Crea la URI temporal para la cámara |
+| res/xml/file_paths.xml y AndroidManifest.xml | Configuran la carpeta compartida por FileProvider |
+| res/drawable/ic_error.xml | Icono local reutilizado cuando hay error |
 | ConsultaViewModelTest.kt | Ocho pruebas locales de las reglas del formulario |
 
-Se conserva la estructura del proyecto y no se agregan dependencias.
+La imagen es opcional y temporal. El archivo compartido está en la caché privada;
+no se sube a un servidor ni se guarda como parte de los favoritos.
 
 ## Reglas
 
@@ -26,6 +30,19 @@ Se conserva la estructura del proyecto y no se agregan dependencias.
 - Al editar se limpia solo el error de ese campo. Al pulsar de nuevo se vuelve a validar.
 - Editar desde Resumen conserva los campos. Finalizar o abrir una consulta nueva los limpia.
 
+## Funciones de fotografía
+
+- `prepararFoto(uri)` guarda el destino de una captura sin sustituir todavía la imagen actual.
+- `recibirFoto(true)` acepta la captura; `recibirFoto(false)` conserva la selección anterior.
+- `actualizarImagen(uri)` recibe una selección de galería; con null permite quitarla.
+- `mostrarErrorImagen()` muestra un mensaje si no se pudo abrir el recurso.
+- `limpiarConsulta()` elimina también la imagen al finalizar o empezar una nueva consulta.
+
+ConsultaScreen ejecuta los contratos con `rememberLauncherForActivityResult`.
+La lectura de la vista previa se realiza en ImagenConsulta. Resumen recibe la misma
+URI del ViewModel compartido. Si Android termina el proceso, los campos y la imagen
+pueden perderse; no se escriben en DataStore.
+
 ## Verificaciones ejecutadas
 
 ```powershell
@@ -35,11 +52,12 @@ Se conserva la estructura del proyecto y no se agregan dependencias.
 Resultado: BUILD SUCCESSFUL; veinte pruebas locales sin fallos, incluidas ocho de consulta;
 lint sin errores. Se generó el APK de depuración.
 El formulario se comprobó en emulador, incluyendo regreso para editar, limpieza
-y cancelación de cámara y galería. La comprobación en teléfono físico queda pendiente.
+y cancelación de cámara y galería. El equipo también confirmó ejecución manual
+en un POCO X5 Pro con HyperOS; el detalle de comprobaciones está en PRUEBAS.md.
 
 ## Cómo probar en Android Studio
 
-1. Ejecutar app → Abrir catálogo de prueba → Nueva consulta.
+1. Ejecutar app → ingresar con la cuenta demo → Nueva consulta.
 2. Pulsar Ver resumen sin escribir: debe seguir en Consulta, con cuatro errores e iconos.
 3. Probar campos con solo espacios, correo sin @ y descripción de nueve caracteres.
 4. Corregir el nombre y comprobar que solo desaparece el error de ese campo.

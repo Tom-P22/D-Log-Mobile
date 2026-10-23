@@ -25,8 +25,9 @@ del equipo se propone usar el mismo emulador con API 37; eso no cambia el SDK m�
 5. Dejar que Android Studio genere `local.properties` con la ubicación local del SDK.
    Ese archivo no se comparte ni se copia desde el equipo de otra persona.
 6. Crear el dispositivo en Device Manager o conectar un teléfono con depuración USB.
-7. Ejecutar la configuración `app`. La base actual muestra «Diseña Madera» y el botón
-   «Abrir catálogo de prueba»; consultar [ESTRUCTURA_MVVM.md](ESTRUCTURA_MVVM.md).
+7. Ejecutar la configuración `app`. Sin sesión guardada aparece el login D-Log.
+   Ingresar con demo@disenamadera.cl y Demo1234. Con sesión guardada se abre el
+   catálogo; consultar [ESTRUCTURA_MVVM.md](ESTRUCTURA_MVVM.md).
 
 No es necesario instalar Kotlin ni Gradle por separado. El Wrapper fija Gradle y el
 proyecto declara sus plugins. Los criterios del daemon pueden descargar un JDK 25

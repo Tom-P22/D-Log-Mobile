@@ -60,8 +60,12 @@ Los informes se generan en:
 
 ## Comprobación final en teléfono real
 
-No se dispone de un teléfono físico conectado durante esta revisión.
-Antes de entregar:
+El equipo confirmó la instalación y ejecución manual en un POCO X5 Pro con
+Xiaomi HyperOS. Los resultados automáticos anteriores corresponden al emulador;
+no se registró una batería automática en ese teléfono. Las grabaciones de
+demostración se mantienen fuera del repositorio y no son recursos de la app.
+
+Para completar el registro por función en el teléfono:
 
 1. Instalar y entrar con demo@disenamadera.cl / Demo1234.
 2. Guardar un favorito, cerrar la app, volver a abrir y comprobarlo.

@@ -46,4 +46,39 @@ coloca sus acciones en columna en compacto y en fila cuando hay más espacio.
 El formulario tiene scroll y MainActivity ajusta el contenido al teclado.
 El cambio de favorito anima el color del botón y muestra el resultado al guardar.
 
+## Recorridos de las funciones
+
+### Inicio y cierre de sesión
+
+1. LoginScreen envía cambios a `actualizarCorreo` y `actualizarClave`.
+2. Al pulsar Iniciar sesión, `iniciarSesion` llama a `validarFormulario`.
+3. Si los datos son correctos, `guardarSesion(true)` actualiza DataStore.
+4. LoginViewModel recibe el nuevo valor; AppNavigation presenta el catálogo.
+5. Al salir, `cerrarSesion` guarda false. AppNavigation reinicia filtros y consulta
+   y muestra el login con una pila nueva. Los favoritos no se eliminan.
+
+### Guardar un favorito
+
+1. DetalleScreen llama a `alternarFavorito(id)`.
+2. SolucionViewModel comprueba el ID y construye el conjunto actualizado.
+3. `guardarFavoritos` escribe los IDs en PreferenciasRepository.
+4. La lectura de DataStore actualiza `favoritos`; catálogo, detalle y listado
+   reciben ese mismo estado. El botón cambia de color y aparece el resultado.
+
+### Adjuntar una imagen
+
+1. Para galería, ConsultaScreen abre `GetContent` con el tipo image/*.
+2. Una selección válida llama a `actualizarImagen(uri)`; cancelar no cambia la imagen.
+3. Para cámara, `crearUriFoto` prepara el archivo y `prepararFoto` guarda su URI pendiente.
+4. `TakePicture` abre la cámara. `recibirFoto` acepta la nueva imagen solo si se confirmó.
+5. `ImagenConsulta` muestra la URI del estado tanto en el formulario como en Resumen.
+
+### Validar, revisar y finalizar
+
+1. Los campos llaman a las funciones actualizar de ConsultaViewModel.
+2. AppNavigation llama a `validarFormulario` al pulsar Ver resumen.
+3. Con errores permanece en Consulta; sin errores navega a Resumen.
+4. Editar vuelve al formulario conservando su estado. Finalizar llama a
+   `limpiarConsulta` y vuelve al catálogo.
+
 Ver [pruebas y limitaciones](PRUEBAS.md).
