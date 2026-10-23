@@ -40,7 +40,7 @@ class SolucionViewModel(
     }
 
     fun reiniciarFiltros() {
-        _uiState.update { it.copy(busquedaTexto = "", categoriaSeleccionada = "Todas", mensaje = null, mensajeSolucionId = null) }
+        _uiState.update { it.copy(busquedaTexto = "", categoriaSeleccionada = "Todas", mensaje = null) }
     }
 
     fun obtenerSolucion(id: String): Solucion? = repository.obtenerSolucionPorId(id)
@@ -50,27 +50,27 @@ class SolucionViewModel(
         if (obtenerSolucion(id) == null || estado.cargando || estado.guardandoFavorito) return
         val ids = if (id in estado.favoritos) estado.favoritos - id else estado.favoritos + id
         val mensaje = if (id in ids) "Favorito guardado" else "Favorito eliminado"
-        guardarFavoritos(ids, mensaje, id)
+        guardarFavoritos(ids, mensaje)
     }
 
     fun limpiarFavoritos() {
         guardarFavoritos(emptySet(), "Favoritos eliminados")
     }
 
-    private fun guardarFavoritos(ids: Set<String>, mensaje: String, solucionId: String? = null) {
+    private fun guardarFavoritos(ids: Set<String>, mensaje: String) {
         // Sin preferencias, las pruebas locales trabajan solo con el estado en memoria.
         val repositorio = preferencias
         if (repositorio == null) {
-            _uiState.update { it.copy(favoritos = ids, mensaje = mensaje, mensajeSolucionId = solucionId) }
+            _uiState.update { it.copy(favoritos = ids, mensaje = mensaje) }
             return
         }
-        _uiState.update { it.copy(guardandoFavorito = true, mensaje = null, mensajeSolucionId = solucionId) }
+        _uiState.update { it.copy(guardandoFavorito = true, mensaje = null) }
         viewModelScope.launch {
             try {
                 repositorio.guardarFavoritos(ids)
-                _uiState.update { it.copy(guardandoFavorito = false, mensaje = mensaje, mensajeSolucionId = solucionId) }
+                _uiState.update { it.copy(guardandoFavorito = false, mensaje = mensaje) }
             } catch (_: IOException) {
-                _uiState.update { it.copy(guardandoFavorito = false, mensaje = "No se pudo guardar el cambio. Intenta nuevamente.", mensajeSolucionId = solucionId) }
+                _uiState.update { it.copy(guardandoFavorito = false, mensaje = "No se pudo guardar el cambio. Intenta nuevamente.") }
             }
         }
     }
