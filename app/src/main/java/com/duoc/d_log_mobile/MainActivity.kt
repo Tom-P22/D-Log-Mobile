@@ -16,10 +16,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // Solo mostrar splash en arranque en frío (no tras cámara / rotación / process death)
+        val mostrarSplash = savedInstanceState == null
         setContent {
             DLogMobileTheme {
                 Scaffold(modifier = Modifier.fillMaxSize().imePadding()) { innerPadding ->
                     AppNavigation(
+                        mostrarSplashInicial = mostrarSplash,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
