@@ -1,30 +1,47 @@
 package com.duoc.d_log_mobile.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.material3.CircularProgressIndicator
-import com.duoc.d_log_mobile.ui.utils.esPantallaAncha
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.duoc.d_log_mobile.model.Solucion
 import com.duoc.d_log_mobile.model.SolucionUiState
 import com.duoc.d_log_mobile.ui.components.PantallaBase
+import com.duoc.d_log_mobile.ui.utils.drawablePorNombre
+import com.duoc.d_log_mobile.ui.utils.esPantallaAncha
 
 @Composable
 fun HomeScreen(
@@ -40,50 +57,94 @@ fun HomeScreen(
     mensajeSesion: String? = null
 ) {
     val categorias = listOf("Todas", "Muros", "Pisos", "Cubiertas", "Terminaciones")
+    val ancho = esPantallaAncha()
 
-    PantallaBase(titulo = "Diseña Madera", modifier = modifier) {
-        // Datos sinteticos del MVP academico.
-        Text("Catalogo de ejemplo: no corresponde a fichas tecnicas oficiales.")
-
-        if (esPantallaAncha()) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                TextButton(onClick = onFavoritos) { Text("Favoritos (${state.favoritos.size})") }
-                Button(onClick = onConsulta) { Text("Nueva consulta") }
+    PantallaBase(
+        titulo = "Diseña Madera",
+        subtitulo = "Catálogo de soluciones constructivas",
+        modifier = modifier
+    ) {
+        if (ancho) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onFavoritos,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(Icons.Default.Favorite, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.size(8.dp))
+                    Text("Favoritos (${state.favoritos.size})")
+                }
+                Button(
+                    onClick = onConsulta,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.size(8.dp))
+                    Text("Nueva consulta")
+                }
             }
         } else {
-            TextButton(onClick = onFavoritos, modifier = Modifier.fillMaxWidth()) { Text("Favoritos (${state.favoritos.size})") }
-            Button(onClick = onConsulta, modifier = Modifier.fillMaxWidth()) { Text("Nueva consulta") }
+            OutlinedButton(
+                onClick = onFavoritos,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Icon(Icons.Default.Favorite, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.size(8.dp))
+                Text("Favoritos (${state.favoritos.size})")
+            }
+            Button(
+                onClick = onConsulta,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Icon(Icons.Outlined.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.size(8.dp))
+                Text("Nueva consulta")
+            }
         }
-        if (state.cargando) CircularProgressIndicator()
-        AnimatedVisibility(mensajeSesion != null) { Text(mensajeSesion.orEmpty(), color = MaterialTheme.colorScheme.error) }
 
-        // Campo de búsqueda
+        if (state.cargando) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
+        AnimatedVisibility(mensajeSesion != null) {
+            Text(
+                mensajeSesion.orEmpty(),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
         OutlinedTextField(
             value = state.busquedaTexto,
             onValueChange = onBusquedaChange,
             label = { Text("Buscar solución constructiva...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            shape = RoundedCornerShape(16.dp)
         )
 
-        // Filtros por Categoría
         Text(
             text = "Categorías",
             style = MaterialTheme.typography.titleMedium
         )
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(categorias) { cat ->
                 FilterChip(
                     selected = state.categoriaSeleccionada.equals(cat, ignoreCase = true),
                     onClick = { onCategoriaSelect(cat) },
-                    label = { Text(cat) }
+                    label = { Text(cat) },
+                    shape = RoundedCornerShape(12.dp)
                 )
             }
         }
 
-        // Listado de Soluciones o Estado Vacío
         if (state.solucionesFiltradas.isEmpty()) {
             Column(
                 modifier = Modifier
@@ -93,7 +154,7 @@ fun HomeScreen(
             ) {
                 Text(
                     text = "No se encontraron soluciones",
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = "Prueba con otra búsqueda o categoría",
@@ -102,9 +163,12 @@ fun HomeScreen(
                 )
             }
         } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            Text(
+                text = "${state.solucionesFiltradas.size} resultado(s)",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 state.solucionesFiltradas.forEach { solucion ->
                     TarjetaSolucion(
                         solucion = solucion,
@@ -114,11 +178,18 @@ fun HomeScreen(
             }
         }
 
+        Spacer(Modifier.height(8.dp))
         TextButton(
             onClick = onSalir,
             enabled = !saliendo,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
+            Icon(
+                Icons.Outlined.Logout,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(Modifier.size(6.dp))
             Text(if (saliendo) "Cerrando sesión…" else "Cerrar sesión")
         }
     }
@@ -129,31 +200,47 @@ private fun TarjetaSolucion(
     solucion: Solucion,
     onDetalle: () -> Unit
 ) {
+    val contexto = LocalContext.current
+    val imagenId = drawablePorNombre(contexto, solucion.imagenRes)
     Card(
         onClick = onDetalle,
         modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.85f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Text(
-                text = solucion.nombre,
-                style = MaterialTheme.typography.titleMedium
+        Column {
+            Image(
+                painter = painterResource(imagenId),
+                contentDescription = solucion.nombre,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp)),
+                contentScale = ContentScale.Crop
             )
-            Text(
-                text = "Categoría: ${solucion.categoria} | Material: ${solucion.material}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = solucion.descripcion,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2
-            )
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(
+                    text = solucion.nombre,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "Categoría: ${solucion.categoria}  ·  Material: ${solucion.material}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = solucion.descripcion,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
