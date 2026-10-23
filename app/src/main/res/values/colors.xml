@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="verde_principal">#FF315C3C</color>
+    <!-- Antes #FF1B4D2E (muy oscuro). Verde más claro para barra de estado y animación de inicio. -->
+    <color name="verde_oscuro">#FF4A7C59</color>
+    <color name="verde_claro">#FFA8CDA0</color>
+    <color name="verde_contenedor">#FFD5E8CB</color>
+    <color name="marron">#FF79583A</color>
+    <color name="fondo_claro">#FFFAF7F0</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Color del fondo del icono adaptativo (no es drawable) -->
+    <color name="ic_launcher_background">#FF4A7C59</color>
 </resources>

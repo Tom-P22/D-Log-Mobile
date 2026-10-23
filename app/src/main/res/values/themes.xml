@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.DLogMobile" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.DLogMobile" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/verde_oscuro</item>
+        <item name="android:navigationBarColor">@color/verde_oscuro</item>
+        <item name="android:windowBackground">@color/fondo_claro</item>
+        <item name="android:colorPrimary">@color/verde_principal</item>
+        <item name="android:colorPrimaryDark">@color/verde_oscuro</item>
+        <item name="android:colorAccent">@color/marron</item>
+    </style>
 </resources>
