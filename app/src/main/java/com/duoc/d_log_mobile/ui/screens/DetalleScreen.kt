@@ -1,5 +1,15 @@
 package com.duoc.d_log_mobile.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import com.duoc.d_log_mobile.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,8 +33,14 @@ fun DetalleScreen(
     esFavorita: Boolean,
     onVolver: () -> Unit,
     onFavorito: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    guardando: Boolean = false,
+    mensaje: String? = null
 ) {
+    val colorFavorito by animateColorAsState(
+        if (esFavorita) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+        label = "colorFavorito"
+    )
     PantallaBase(titulo = "Detalle Técnico", modifier = modifier) {
         Text("Ficha sintetica de ejemplo. Sin prestaciones tecnicas certificadas.")
         if (solucion == null) {
@@ -46,6 +62,10 @@ fun DetalleScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    Image(
+                        painterResource(R.drawable.fondo_bosque), "Imagen de referencia de madera y naturaleza",
+                        Modifier.fillMaxWidth().height(160.dp), contentScale = ContentScale.Crop
+                    )
                     Text(
                         text = solucion.nombre,
                         style = MaterialTheme.typography.headlineSmall
@@ -60,20 +80,24 @@ fun DetalleScreen(
                 }
             }
 
-            Row(
+            if (guardando) CircularProgressIndicator()
+            AnimatedVisibility(mensaje != null) { Text(mensaje.orEmpty()) }
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
                     onClick = onFavorito,
-                    modifier = Modifier.weight(1f)
+                    enabled = !guardando,
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = colorFavorito),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(if (esFavorita) "Quitar favorito temporal" else "Guardar favorito temporal")
+                    Text(if (esFavorita) "Quitar de favoritos" else "Guardar en favoritos")
                 }
 
                 Button(
                     onClick = onVolver,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Volver")
                 }

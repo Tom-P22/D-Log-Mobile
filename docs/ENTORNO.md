@@ -57,8 +57,8 @@ Compilar el APK de depuración y ejecutar las pruebas unitarias locales:
 
 APK esperado: `app/build/outputs/apk/debug/app-debug.apk`.
 Informe de pruebas: `app/build/reports/tests/testDebugUnitTest/index.html`.
-Las pruebas locales incluyen el ejemplo y seis casos de catálogo, filtros y favoritos
-temporales. No sustituyen las pruebas de navegación y recursos nativos en dispositivo.
+Las pruebas locales incluyen el ejemplo, seis casos de catálogo y favoritos,
+ocho de consulta y cinco de login. No sustituyen las pruebas de navegación y recursos nativos en dispositivo.
 El recorrido base se comprueba manualmente siguiendo ESTRUCTURA_MVVM.md.
 
 Cuando exista un dispositivo disponible, ejecutar pruebas instrumentadas:

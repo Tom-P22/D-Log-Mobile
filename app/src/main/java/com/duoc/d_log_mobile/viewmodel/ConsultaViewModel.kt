@@ -1,5 +1,6 @@
 package com.duoc.d_log_mobile.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.duoc.d_log_mobile.model.ConsultaErrores
 import com.duoc.d_log_mobile.model.ConsultaUiState
@@ -55,6 +56,26 @@ class ConsultaViewModel : ViewModel() {
             errores.nombre, errores.correo, errores.categoria, errores.descripcion
         ).isNotEmpty()
         return !hayErrores
+    }
+
+    fun prepararFoto(uri: Uri) {
+        _uiState.value = _uiState.value.copy(fotoPendiente = uri, mensajeImagen = null)
+    }
+
+    fun recibirFoto(guardada: Boolean) {
+        val estado = _uiState.value
+        _uiState.value = estado.copy(
+            imagenUri = if (guardada) estado.fotoPendiente ?: estado.imagenUri else estado.imagenUri,
+            fotoPendiente = null
+        )
+    }
+
+    fun actualizarImagen(uri: Uri?) {
+        _uiState.value = _uiState.value.copy(imagenUri = uri, mensajeImagen = null)
+    }
+
+    fun mostrarErrorImagen() {
+        _uiState.value = _uiState.value.copy(fotoPendiente = null, mensajeImagen = "No se pudo abrir el recurso. Intenta nuevamente.")
     }
 
     fun limpiarConsulta() {

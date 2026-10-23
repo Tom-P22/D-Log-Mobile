@@ -1,5 +1,9 @@
 package com.duoc.d_log_mobile.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -7,8 +11,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,6 +23,8 @@ import com.duoc.d_log_mobile.R
 import com.duoc.d_log_mobile.model.ConsultaErrores
 import com.duoc.d_log_mobile.model.ConsultaUiState
 import com.duoc.d_log_mobile.ui.components.PantallaBase
+import com.duoc.d_log_mobile.ui.components.ImagenConsulta
+import com.duoc.d_log_mobile.ui.utils.crearUriFoto
 import com.duoc.d_log_mobile.ui.theme.DLogMobileTheme
 
 @Composable
@@ -27,8 +36,19 @@ fun ConsultaScreen(
     onDescripcionChange: (String) -> Unit,
     onResumen: () -> Unit,
     onVolver: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onImagenChange: (Uri?) -> Unit = {},
+    onPrepararFoto: (Uri) -> Unit = {},
+    onRecibirFoto: (Boolean) -> Unit = {},
+    onErrorImagen: () -> Unit = {}
 ) {
+    val contexto = LocalContext.current
+    val galeria = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) onImagenChange(uri)
+    }
+    val camara = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { guardada ->
+        onRecibirFoto(guardada)
+    }
     PantallaBase("Consulta técnica", modifier) {
         Text("Completa todos los campos para revisar tu consulta. No se envía información.")
         OutlinedTextField(
@@ -39,7 +59,7 @@ fun ConsultaScreen(
             isError = state.errores.nombre != null,
             supportingText = { state.errores.nombre?.let { Text(it) } },
             trailingIcon = { if (state.errores.nombre != null) IconoErrorConsulta() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("consultaNombre")
         )
         OutlinedTextField(
             value = state.correo,
@@ -50,7 +70,7 @@ fun ConsultaScreen(
             isError = state.errores.correo != null,
             supportingText = { state.errores.correo?.let { Text(it) } },
             trailingIcon = { if (state.errores.correo != null) IconoErrorConsulta() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("consultaCorreo")
         )
         OutlinedTextField(
             value = state.categoria,
@@ -60,7 +80,7 @@ fun ConsultaScreen(
             isError = state.errores.categoria != null,
             supportingText = { Text(state.errores.categoria ?: "Ej.: Muros, Pisos, Cubiertas o Terminaciones") },
             trailingIcon = { if (state.errores.categoria != null) IconoErrorConsulta() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("consultaCategoria")
         )
         OutlinedTextField(
             value = state.descripcion,
@@ -70,8 +90,26 @@ fun ConsultaScreen(
             isError = state.errores.descripcion != null,
             supportingText = { Text(state.errores.descripcion ?: "Escribe al menos 10 caracteres") },
             trailingIcon = { if (state.errores.descripcion != null) IconoErrorConsulta() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("consultaDescripcion")
         )
+        Text("Imagen de referencia (opcional)")
+        Button(onClick = {
+            try { galeria.launch("image/*") } catch (_: Exception) { onErrorImagen() }
+        }) { Text("Seleccionar imagen") }
+        Button(onClick = {
+            try {
+                val uri = crearUriFoto(contexto)
+                onPrepararFoto(uri)
+                camara.launch(uri)
+            } catch (_: Exception) { onErrorImagen() }
+        }) { Text("Tomar fotografía") }
+        AnimatedVisibility(state.mensajeImagen != null) {
+            Text(state.mensajeImagen.orEmpty(), color = MaterialTheme.colorScheme.error)
+        }
+        ImagenConsulta(state.imagenUri)
+        if (state.imagenUri != null) {
+            TextButton(onClick = { onImagenChange(null) }) { Text("Quitar imagen") }
+        }
         Button(onClick = onResumen) { Text("Ver resumen") }
         Button(onClick = onVolver) { Text("Volver") }
     }

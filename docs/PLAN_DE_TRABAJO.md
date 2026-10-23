@@ -4,14 +4,9 @@ La referencia funcional es [Alcance y desarrollo del MVP](ALCANCE_DEL_PROYECTO.m
 basado en la planificación actualizada de Diseña Madera. Esta tabla
 es una propuesta de reparto para Tomás Peña, Marcelo Salas y Fernando Villalobos, que deben
 revisar antes de asignar los Issues.
-El estado inicial y los criterios se detallan abajo. La integración del catálogo
-y la implementación de C09 tienen registros separados; las pruebas manuales
-pendientes deben completarse antes de marcar las tareas como finalizadas.
-Las plantillas del repositorio no crean Issues ni configuran GitHub automáticamente.
-
-Ya existe una [base MVVM con las seis pantallas conectadas](ESTRUCTURA_MVVM.md).
-Este recorrido provisional prepara los contratos y parte de C04, C08 y C10, pero
-no completa sus criterios: todavía faltan reglas, persistencia y verificación de ejecución.
+La implementación de C01 a C13 está disponible en el código. Las tablas siguientes
+conservan el reparto previsto. La verificación de C14 se registra en PRUEBAS.md;
+la entrega, los datos del grupo y las evidencias de los integrantes corresponden a C15.
 
 ## Etapa 0 · Entorno común
 
@@ -89,9 +84,18 @@ Vincularlo al PR y moverlo por Por hacer → En curso → En revisión → Final
 La fecha límite exacta debe registrarse desde las indicaciones del docente; no se ha
 inferido una fecha a partir del cronograma de referencia.
 
-## Avance C09
+## Estado de implementación
 
-Implementados errores por campo y validaciones desde ConsultaViewModel. Resumen solo abre si validarFormulario() devuelve true. Compilación,
-quince pruebas unitarias (ocho de consulta) y lint sin errores verificados.
-Pendiente: comprobar interacción visual, teclado, regreso y edición en dispositivo.
-Ver [explicación y recorrido manual](CONSULTA_VALIDADA.md).
+| Tareas | Estado |
+| --- | --- |
+| C01, C03, C06 | Catálogo, filtros y detalle implementados |
+| C02, C04, C05 | Login demo, navegación y sesión persistente implementados |
+| C07, C08 | Favoritos persistentes y listado conectados |
+| C09, C10 | Consulta validada, resumen y edición conectados |
+| C11 | Cámara, galería, vista previa y cancelación implementadas |
+| C12 | Window Size Classes, ancho máximo, scroll y teclado |
+| C13 | Color animado de favoritos, mensajes e indicadores de carga |
+| C14 | Pruebas locales y del emulador; falta comprobación final en teléfono real |
+| C15 | Documentación actualizada; completar número de grupo y evidencias del equipo |
+
+Ver [resultados y recorrido de prueba](PRUEBAS.md).

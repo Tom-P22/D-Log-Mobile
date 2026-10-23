@@ -1,119 +1,127 @@
 package com.duoc.d_log_mobile.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.duoc.d_log_mobile.ui.screens.ConsultaScreen
-import com.duoc.d_log_mobile.ui.screens.DetalleScreen
-import com.duoc.d_log_mobile.ui.screens.FavoritosScreen
-import com.duoc.d_log_mobile.ui.screens.HomeScreen
-import com.duoc.d_log_mobile.ui.screens.LoginScreen
-import com.duoc.d_log_mobile.ui.screens.ResumenScreen
+import com.duoc.d_log_mobile.repository.PreferenciasRepository
+import com.duoc.d_log_mobile.ui.screens.*
 import com.duoc.d_log_mobile.viewmodel.ConsultaViewModel
 import com.duoc.d_log_mobile.viewmodel.LoginViewModel
 import com.duoc.d_log_mobile.viewmodel.SolucionViewModel
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
-
-    // Se crean una sola vez aquí para compartirlos entre las pantallas.
-    val loginViewModel: LoginViewModel = viewModel()
-    val solucionViewModel: SolucionViewModel = viewModel()
+    val contexto = LocalContext.current.applicationContext
+    val preferencias = remember { PreferenciasRepository(contexto) }
+    val loginViewModel: LoginViewModel = viewModel { LoginViewModel(preferencias) }
+    val solucionViewModel: SolucionViewModel = viewModel { SolucionViewModel(preferencias = preferencias) }
     val consultaViewModel: ConsultaViewModel = viewModel()
-
-    // Cuando cambia un StateFlow, Compose actualiza lo que muestra la pantalla.
     val loginState by loginViewModel.uiState.collectAsState()
     val solucionState by solucionViewModel.uiState.collectAsState()
     val consultaState by consultaViewModel.uiState.collectAsState()
+    val sesion = loginState.sesionIniciada
 
-    NavHost(navController, startDestination = Routes.LOGIN, modifier = modifier) {
-        composable(Routes.LOGIN) {
-            LoginScreen(
-                state = loginState,
-                onCorreoChange = { loginViewModel.actualizarCorreo(it) },
-                onAbrirRecorrido = {
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            )
+    // Se espera a leer DataStore antes de elegir la pantalla inicial.
+    if (sesion == null) {
+        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+        return
+    }
+    LaunchedEffect(sesion) {
+        if (!sesion) {
+            consultaViewModel.limpiarConsulta()
+            solucionViewModel.reiniciarFiltros()
         }
-        composable(Routes.HOME) {
-            HomeScreen(
-                state = solucionState,
-                onBusquedaChange = { solucionViewModel.actualizarBusqueda(it) },
-                onCategoriaSelect = { solucionViewModel.seleccionarCategoria(it) },
-                onDetalle = { navController.navigate(Routes.detalle(it)) },
-                onFavoritos = { navController.navigate(Routes.FAVORITOS) },
-                onConsulta = {
-                    consultaViewModel.limpiarConsulta()
-                    navController.navigate(Routes.CONSULTA)
-                },
-                onSalir = {
-                    loginViewModel.limpiarCorreo()
-                    solucionViewModel.limpiarFavoritos()
-                    consultaViewModel.limpiarConsulta()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.HOME) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            )
-        }
-        composable(
-            route = Routes.DETALLE,
-            arguments = listOf(navArgument(Routes.SOLUCION_ID) { type = NavType.StringType })
-        ) { entry ->
-            val id = entry.arguments?.getString(Routes.SOLUCION_ID).orEmpty()
-            DetalleScreen(
-                solucion = solucionViewModel.obtenerSolucion(id),
-                esFavorita = id in solucionState.favoritos,
-                onFavorito = { solucionViewModel.alternarFavorito(id) },
-                onVolver = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.FAVORITOS) {
-            FavoritosScreen(
-                soluciones = solucionState.solucionesFavoritas,
-                onDetalle = { navController.navigate(Routes.detalle(it)) },
-                onVolver = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.CONSULTA) {
-            ConsultaScreen(
-                state = consultaState,
-                onNombreChange = { consultaViewModel.actualizarNombre(it) },
-                onCorreoChange = { consultaViewModel.actualizarCorreo(it) },
-                onCategoriaChange = { consultaViewModel.actualizarCategoria(it) },
-                onDescripcionChange = { consultaViewModel.actualizarDescripcion(it) },
-                onResumen = {
-                    if (consultaViewModel.validarFormulario()) {
-                        navController.navigate(Routes.RESUMEN) {
-                            launchSingleTop = true
+    }
+
+    // Al entrar o salir se crea una pila nueva: Atrás no recupera una sesión cerrada.
+    key(sesion) {
+        val navController = rememberNavController()
+        NavHost(navController, startDestination = if (sesion) Routes.HOME else Routes.LOGIN, modifier = modifier) {
+            composable(Routes.LOGIN) {
+                LoginScreen(
+                    state = loginState,
+                    onCorreoChange = { loginViewModel.actualizarCorreo(it) },
+                    onClaveChange = { loginViewModel.actualizarClave(it) },
+                    onIniciarSesion = { loginViewModel.iniciarSesion() }
+                )
+            }
+            composable(Routes.HOME) {
+                HomeScreen(
+                    state = solucionState,
+                    onBusquedaChange = { solucionViewModel.actualizarBusqueda(it) },
+                    onCategoriaSelect = { solucionViewModel.seleccionarCategoria(it) },
+                    onDetalle = { navController.navigate(Routes.detalle(it)) { launchSingleTop = true } },
+                    onFavoritos = { navController.navigate(Routes.FAVORITOS) { launchSingleTop = true } },
+                    onConsulta = {
+                        consultaViewModel.limpiarConsulta()
+                        navController.navigate(Routes.CONSULTA) { launchSingleTop = true }
+                    },
+                    onSalir = { loginViewModel.cerrarSesion() },
+                    saliendo = loginState.cargando,
+                    mensajeSesion = loginState.mensaje
+                )
+            }
+            composable(
+                Routes.DETALLE,
+                arguments = listOf(navArgument(Routes.SOLUCION_ID) { type = NavType.StringType })
+            ) { entry ->
+                val id = entry.arguments?.getString(Routes.SOLUCION_ID).orEmpty()
+                DetalleScreen(
+                    solucion = solucionViewModel.obtenerSolucion(id),
+                    esFavorita = id in solucionState.favoritos,
+                    onFavorito = { solucionViewModel.alternarFavorito(id) },
+                    onVolver = { navController.popBackStack() },
+                    guardando = solucionState.guardandoFavorito || solucionState.cargando,
+                    mensaje = solucionState.mensaje
+                )
+            }
+            composable(Routes.FAVORITOS) {
+                FavoritosScreen(
+                    soluciones = solucionState.solucionesFavoritas,
+                    onDetalle = { navController.navigate(Routes.detalle(it)) { launchSingleTop = true } },
+                    onVolver = { navController.popBackStack() },
+                    cargando = solucionState.cargando
+                )
+            }
+            composable(Routes.CONSULTA) {
+                ConsultaScreen(
+                    state = consultaState,
+                    onNombreChange = { consultaViewModel.actualizarNombre(it) },
+                    onCorreoChange = { consultaViewModel.actualizarCorreo(it) },
+                    onCategoriaChange = { consultaViewModel.actualizarCategoria(it) },
+                    onDescripcionChange = { consultaViewModel.actualizarDescripcion(it) },
+                    onResumen = {
+                        if (consultaViewModel.validarFormulario()) {
+                            navController.navigate(Routes.RESUMEN) { launchSingleTop = true }
                         }
+                    },
+                    onVolver = { navController.popBackStack() },
+                    onImagenChange = { consultaViewModel.actualizarImagen(it) },
+                    onPrepararFoto = { consultaViewModel.prepararFoto(it) },
+                    onRecibirFoto = { consultaViewModel.recibirFoto(it) },
+                    onErrorImagen = { consultaViewModel.mostrarErrorImagen() }
+                )
+            }
+            composable(Routes.RESUMEN) {
+                ResumenScreen(
+                    state = consultaState,
+                    onEditar = { navController.popBackStack() },
+                    onFinalizar = {
+                        consultaViewModel.limpiarConsulta()
+                        navController.popBackStack(Routes.HOME, inclusive = false)
                     }
-                },
-                onVolver = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.RESUMEN) {
-            ResumenScreen(
-                state = consultaState,
-                onEditar = { navController.popBackStack() },
-                onFinalizar = {
-                    consultaViewModel.limpiarConsulta()
-                    navController.popBackStack(Routes.HOME, inclusive = false)
-                }
-            )
+                )
+            }
         }
     }
 }

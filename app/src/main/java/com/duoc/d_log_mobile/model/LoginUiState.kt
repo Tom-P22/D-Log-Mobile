@@ -1,4 +1,11 @@
 package com.duoc.d_log_mobile.model
 
-// Contrato inicial. Los errores y las validaciones se incorporan en la tarea de login.
-data class LoginUiState(val correo: String = "")
+data class LoginUiState(
+    val correo: String = "",
+    val clave: String = "",
+    val errorCorreo: String? = null,
+    val errorClave: String? = null,
+    val mensaje: String? = null,
+    val cargando: Boolean = false,
+    val sesionIniciada: Boolean? = null
+)

@@ -57,7 +57,7 @@ class SolucionViewModelTest {
     }
 
     @Test
-    fun salirLimpiaFavoritosSinEliminarElCatalogo() {
+    fun limpiarFavoritosNoEliminaElCatalogo() {
         val viewModel = SolucionViewModel()
         val soluciones = viewModel.uiState.value.soluciones
         soluciones.forEach { viewModel.alternarFavorito(it.id) }

@@ -1,5 +1,8 @@
 # Registro de validación inicial
 
+Este documento conserva el diagnóstico inicial del entorno. El bloqueo descrito
+no se reproduce en las comprobaciones actuales; consultar PRUEBAS.md y README.md.
+
 Verificación por terminal en Windows;
 no sustituye la incorporación de cada integrante en Android Studio.
 

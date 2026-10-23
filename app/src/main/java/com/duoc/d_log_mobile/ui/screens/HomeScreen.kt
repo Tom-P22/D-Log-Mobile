@@ -1,5 +1,8 @@
 package com.duoc.d_log_mobile.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.material3.CircularProgressIndicator
+import com.duoc.d_log_mobile.ui.utils.esPantallaAncha
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +35,9 @@ fun HomeScreen(
     onFavoritos: () -> Unit,
     onConsulta: () -> Unit,
     onSalir: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    saliendo: Boolean = false,
+    mensajeSesion: String? = null
 ) {
     val categorias = listOf("Todas", "Muros", "Pisos", "Cubiertas", "Terminaciones")
 
@@ -40,19 +45,17 @@ fun HomeScreen(
         // Datos sinteticos del MVP academico.
         Text("Catalogo de ejemplo: no corresponde a fichas tecnicas oficiales.")
 
-        // Barra de acciones superiores
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextButton(onClick = onFavoritos) {
-                Text("Favoritos (${state.favoritos.size})")
+        if (esPantallaAncha()) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                TextButton(onClick = onFavoritos) { Text("Favoritos (${state.favoritos.size})") }
+                Button(onClick = onConsulta) { Text("Nueva consulta") }
             }
-            Button(onClick = onConsulta) {
-                Text("Nueva consulta")
-            }
+        } else {
+            TextButton(onClick = onFavoritos, modifier = Modifier.fillMaxWidth()) { Text("Favoritos (${state.favoritos.size})") }
+            Button(onClick = onConsulta, modifier = Modifier.fillMaxWidth()) { Text("Nueva consulta") }
         }
+        if (state.cargando) CircularProgressIndicator()
+        AnimatedVisibility(mensajeSesion != null) { Text(mensajeSesion.orEmpty(), color = MaterialTheme.colorScheme.error) }
 
         // Campo de búsqueda
         OutlinedTextField(
@@ -113,9 +116,10 @@ fun HomeScreen(
 
         TextButton(
             onClick = onSalir,
+            enabled = !saliendo,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("Cerrar sesión")
+            Text(if (saliendo) "Cerrando sesión…" else "Cerrar sesión")
         }
     }
 }

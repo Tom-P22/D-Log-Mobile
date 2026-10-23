@@ -1,133 +1,93 @@
 # D-Log-Mobile · Diseña Madera
 
-Proyecto académico de Desarrollo de Aplicaciones Móviles (DSY1105), Unidad 2.
-El MVP permitirá explorar soluciones constructivas en madera desde Android.
-
-El problema, los usuarios, los criterios de aceptación y el enfoque de implementación
-se detallan en [Alcance y desarrollo del MVP](docs/ALCANCE_DEL_PROYECTO.md).
+Aplicación Android para explorar un catálogo de ejemplo de soluciones constructivas
+en madera. Proyecto académico DSY1105, basado en el contexto Diseña Madera – CIM UC.
 
 ## Equipo
 
-| Dato | Valor |
-| --- | --- |
-| Integrante 1 | Tomás Peña |
-| Integrante 2 | Marcelo Salas |
-| Integrante 3 | Fernando Villalobos |
-| Número de grupo | Pendiente de completar |
-| Repositorio | [Tom-P22/D-Log-Mobile](https://github.com/Tom-P22/D-Log-Mobile) |
+- Tomás Peña
+- Marcelo Salas
+- Fernando Villalobos
+- Número de grupo: pendiente de completar por el equipo.
 
-`D-Log-Mobile` es el nombre técnico actual del proyecto. El contexto funcional es
-Diseña Madera. El nombre visible definitivo se acordará antes de personalizar la UI.
+## Funciones
 
-## Estado actual
+- Inicio de sesión local con errores por campo y cuenta de demostración.
+- Sesión y favoritos guardados con DataStore Preferences.
+- Seis soluciones con búsqueda por nombre o descripción y filtro por categoría.
+- Ficha de detalle con imagen de referencia y recurso técnico de ejemplo.
+- Listado de favoritos, mensaje de lista vacía y acceso al detalle.
+- Consulta con nombre, correo, categoría y descripción de al menos diez caracteres.
+- Imagen opcional seleccionada desde galería o capturada con la cámara del dispositivo.
+- Resumen que conserva los datos al volver a editar.
+- Animación de favoritos y mensajes; indicadores durante lectura o escritura.
+- Scroll, ajuste al teclado y distribución según Window Size Classes.
 
-Base con Kotlin, Jetpack Compose, Material 3 y estructura MVVM. Las seis pantallas
-están conectadas mediante Navigation Compose, con seis fichas sintéticas, búsqueda
-por texto y filtros de categoría, detalle, favoritos temporales y estado compartido
-entre Consulta y Resumen. La entrada es un recorrido
-de prueba, sin autenticación; no hay credenciales demo todavía. La consulta ya valida
-los cuatro campos desde su ViewModel y solo permite avanzar si son correctos.
-Se verificaron compilación, quince pruebas unitarias y lint
-desde terminal. La ejecución del flujo integrado en dispositivo sigue pendiente.
-Consultar [la estructura y los pasos de prueba](docs/ESTRUCTURA_MVVM.md).
+## Ejecutar
 
-## Alcance acordado
+1. Abrir la carpeta del repositorio en Android Studio.
+2. Sincronizar Gradle. Se necesita internet para descargar las dependencias.
+3. Seleccionar un emulador o teléfono Android API 24 o superior.
+4. Ejecutar el módulo app.
 
-- Login local simulado, validaciones y persistencia de sesión.
-- Catálogo local con 6 a 8 soluciones sintéticas, búsqueda y categorías.
-- Detalle con información y recursos relacionados de prueba.
-- Favoritos persistentes.
-- Formulario de consulta validado y pantalla de resumen.
-- Fotografía desde cámara o galería, con vista previa y manejo de cancelación.
-- Adaptabilidad y animaciones que entreguen retroalimentación.
-
-El catálogo, la búsqueda, los filtros, el detalle y la consulta validada ya están implementados;
-el resto mantiene las limitaciones descritas en el estado actual.
-No se contempla backend, Firebase, autenticación remota, catálogo productivo,
-integración BIM ni publicación en tiendas. Las fichas de prueba no representan
-especificaciones técnicas oficiales. El login será una simulación académica.
-
-## Entorno del proyecto
-
-| Componente | Configuración versionada |
-| --- | --- |
-| Android Gradle Plugin | 9.4.1 |
-| Gradle Wrapper | 9.6.0 |
-| JVM del daemon de Gradle | Java 25 |
-| Plugin Kotlin Compose | 2.2.10 |
-| Compose BOM | 2026.02.01 |
-| SDK de compilación / destino | 37 |
-| SDK mínimo | 24 (Android 7.0) |
-| Identificador de aplicación | `com.duoc.d_log_mobile` |
-
-Las fuentes de verdad son `gradle/libs.versions.toml`,
-`gradle/wrapper/gradle-wrapper.properties`, `gradle/gradle-daemon-jvm.properties`
-y `app/build.gradle.kts`. El nivel Java 11 de compilación del código no sustituye
-la JVM 25 configurada para ejecutar Gradle.
-
-## Primer inicio
-
-1. Instalar Git y Android Studio compatible con las versiones del proyecto.
-2. Clonar el repositorio:
-
-   ```powershell
-   git clone https://github.com/Tom-P22/D-Log-Mobile.git
-   cd D-Log-Mobile
-   ```
-
-3. Abrir esa carpeta desde Android Studio y seguir [la guía de entorno](docs/ENTORNO.md).
-4. Sincronizar Gradle, seleccionar un emulador o teléfono y ejecutar `app`.
-5. Confirmar que aparece «Diseña Madera» con el botón «Abrir catálogo de prueba»
-   y seguir el recorrido descrito en [ESTRUCTURA_MVVM.md](docs/ESTRUCTURA_MVVM.md).
-
-Se requiere internet para la primera descarga de herramientas y dependencias.
-Usar siempre el Wrapper del repositorio; no instalar Gradle globalmente.
-
-El desarrollo se integra en `dev`; `main` recibirá la versión completa y verificada.
-
-## Organización y colaboración
-
-- [Qué construiremos y cómo lo desarrollaremos](docs/ALCANCE_DEL_PROYECTO.md).
-- [Instalación, comandos y solución de problemas](docs/ENTORNO.md).
-- [Ramas, commits, revisiones y acuerdos de trabajo](CONTRIBUTING.md).
-- [Tareas iniciales, responsables y dependencias](docs/PLAN_DE_TRABAJO.md).
-- [Archivos MVVM, conexión de vistas y pruebas del recorrido](docs/ESTRUCTURA_MVVM.md).
-- [Descripción de cada archivo y sus funciones](docs/GUIA_DE_ARCHIVOS.md).
-
-La planificación se llevará en GitHub Issues/Projects, conforme al acuerdo
-registrado en el plan actualizado de trabajar sin Trello. Conservar la confirmación
-del docente y evidencias de tareas y aportes de los tres integrantes.
-
-## Arquitectura prevista
-
-Un solo módulo Android `app`, con paquetes bajo `com.duoc.d_log_mobile`:
+Cuenta de prueba:
 
 ```text
-model/          Datos y estados de pantalla
-repository/     Catálogo local y preferencias persistentes
-viewmodel/      Lógica de presentación y validaciones
-navigation/     Rutas y navegación
-ui/screens/     Pantallas Compose
-ui/components/  Componentes reutilizables
-ui/theme/       Tema existente
+Correo: demo@disenamadera.cl
+Contraseña: Demo1234
 ```
 
-La estructura inicial ya existe. Las pantallas muestran estado y emiten acciones;
-los ViewModels procesan cambios y el repositorio entrega los datos de prueba.
-Cada tarea ampliará esta base con las reglas del MVP y persistencia.
+## Tecnología y estructura
 
-## Validación y entrega
+Kotlin, Jetpack Compose, Material 3, ViewModel, StateFlow, Navigation Compose,
+DataStore Preferences y contratos de cámara/galería. Un solo módulo app.
 
-Los comandos de compilación y pruebas están en [ENTORNO.md](docs/ENTORNO.md).
-La [validación inicial](docs/VALIDACION_ENTORNO.md) conserva el bloqueo histórico
-del daemon. La [integración del catálogo](docs/INTEGRACION_CATALOGO.md) registra
-la compilación y las pruebas exitosas de la integración.
-Las pruebas incluyen seis casos del catálogo y favoritos, ocho de consulta y el ejemplo inicial.
-Ver [consulta validada y explicación del código](docs/CONSULTA_VALIDADA.md).
-El recorrido visual debe comprobarse manualmente siguiendo ESTRUCTURA_MVVM.md.
-Cada funcionalidad deberá registrar sus pasos de prueba en su pull request.
+```text
+com.duoc.d_log_mobile/
+  MainActivity.kt
+  model/          Datos y estados
+  repository/     Catálogo local y preferencias
+  viewmodel/      Validaciones y acciones
+  navigation/     Rutas y conexión de pantallas
+  ui/screens/     Pantallas
+  ui/components/  Contenedor e imagen de consulta
+  ui/utils/       Tamaño de ventana y URI temporal
+  ui/theme/       Colores y tipografía
+```
 
-Antes de entregar: actualizar funcionalidades disponibles, usuario demo y evidencias;
-comprobar acceso del docente y visibilidad exigida del repositorio; entregar el código
-en AVA grupal y completar la activación individual. Respetar la fecha de cierre y
-la restricción de cambios posteriores indicada en el encargo.
+Las pantallas muestran datos y llaman funciones. Los ViewModels cambian el estado,
+y los repositorios entregan las fichas o guardan preferencias. No hay interfaces
+propias, inyección de dependencias ni capas adicionales.
+
+Se conserva la configuración base: AGP 9.4.1, Gradle 9.6.0, Java 25 para el daemon,
+Compose BOM 2026.02.01 y SDK de compilación/destino 37.
+
+## Pruebas
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+.\gradlew.bat :app:connectedDebugAndroidTest
+```
+
+El segundo comando requiere emulador o teléfono conectado. Ver los resultados y el
+recorrido de comprobación en [PRUEBAS.md](docs/PRUEBAS.md).
+
+## Límites
+
+- El login es una simulación local. No es autenticación para producción.
+- Solo se guarda el indicador de sesión y los IDs favoritos; no se guarda la contraseña.
+- Los favoritos son del dispositivo y se mantienen al cerrar sesión.
+- La consulta no se envía. Los campos y la imagen son temporales y se pueden perder
+  si Android termina el proceso; los ViewModels los conservan durante cambios de orientación.
+- Las fotos capturadas se guardan en la caché privada. La selección de galería usa
+  acceso temporal. No se crea un archivo permanente ni se carga a un servidor.
+- La app usa cámara y selector externos. Solo comparte la carpeta temporal mediante
+  FileProvider; no solicita acceso general al almacenamiento ni permiso directo de cámara.
+- Las fichas e imágenes son ejemplos, no prestaciones certificadas ni documentación oficial.
+- Antes de entregar, completar el grupo y las evidencias, revisar el acceso del docente
+  y comprobar cámara/galería en un teléfono real.
+
+El trabajo se integra en dev. Main recibe la versión verificada mediante PR.
+Los commits y el push los realiza cada integrante con su cuenta.
+
+[Plan de trabajo](docs/PLAN_DE_TRABAJO.md) · [Acuerdos de colaboración](CONTRIBUTING.md)

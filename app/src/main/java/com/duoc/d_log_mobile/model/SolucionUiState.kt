@@ -7,7 +7,10 @@ data class SolucionUiState(
     val soluciones: List<Solucion> = emptyList(),
     val busquedaTexto: String = "",
     val categoriaSeleccionada: String = "Todas",
-    val favoritos: Set<String> = emptySet()
+    val favoritos: Set<String> = emptySet(),
+    val cargando: Boolean = false,
+    val guardandoFavorito: Boolean = false,
+    val mensaje: String? = null
 ) {
     /**
      * Lista filtrada según el texto ingresado y la categoría elegida.

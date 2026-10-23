@@ -32,9 +32,10 @@ Se conserva la estructura del proyecto y no se agregan dependencias.
 .\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug --console=plain
 ```
 
-Resultado: BUILD SUCCESSFUL; quince pruebas sin fallos, incluidas ocho de consulta;
-lint con cero errores y once advertencias. Se generó el APK de depuración.
-No se ejecutó la pantalla en emulador ni teléfono durante esta implementación.
+Resultado: BUILD SUCCESSFUL; veinte pruebas locales sin fallos, incluidas ocho de consulta;
+lint sin errores. Se generó el APK de depuración.
+El formulario se comprobó en emulador, incluyendo regreso para editar, limpieza
+y cancelación de cámara y galería. La comprobación en teléfono físico queda pendiente.
 
 ## Cómo probar en Android Studio
 
@@ -49,4 +50,6 @@ No se ejecutó la pantalla en emulador ni teléfono durante esta implementación
 8. Finalizar y abrir Nueva consulta: comprobar campos y errores vacíos.
 9. Revisar pantalla pequeña, scroll y teclado: se debe poder alcanzar Ver resumen y Volver.
 
-La fotografía y las animaciones quedan para sus tareas correspondientes.
+La consulta permite adjuntar una fotografía desde cámara o galería. Resumen muestra
+la misma imagen. Cancelar mantiene la selección anterior; al finalizar se limpia.
+Ver [estado de las pruebas](PRUEBAS.md).

@@ -1,23 +1,34 @@
 package com.duoc.d_log_mobile.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.duoc.d_log_mobile.model.Solucion
 import com.duoc.d_log_mobile.model.SolucionUiState
+import com.duoc.d_log_mobile.repository.PreferenciasRepository
 import com.duoc.d_log_mobile.repository.SolucionRepository
+import java.io.IOException
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SolucionViewModel(
-    private val repository: SolucionRepository = SolucionRepository()
+    private val repository: SolucionRepository = SolucionRepository(),
+    private val preferencias: PreferenciasRepository? = null
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(SolucionUiState())
-    val uiState: StateFlow<SolucionUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(
+        SolucionUiState(soluciones = repository.obtenerSoluciones(), cargando = preferencias != null)
+    )
+    val uiState = _uiState.asStateFlow()
 
     init {
-        _uiState.update { it.copy(soluciones = repository.obtenerSoluciones()) }
+        if (preferencias != null) {
+            viewModelScope.launch {
+                preferencias.favoritos.collect { ids ->
+                    _uiState.update { it.copy(favoritos = ids, cargando = false) }
+                }
+            }
+        }
     }
 
     fun actualizarBusqueda(texto: String) {
@@ -28,24 +39,39 @@ class SolucionViewModel(
         _uiState.update { it.copy(categoriaSeleccionada = categoria) }
     }
 
-    fun obtenerSolucion(id: String): Solucion? {
-        return repository.obtenerSolucionPorId(id)
+    fun reiniciarFiltros() {
+        _uiState.update { it.copy(busquedaTexto = "", categoriaSeleccionada = "Todas", mensaje = null) }
     }
 
+    fun obtenerSolucion(id: String): Solucion? = repository.obtenerSolucionPorId(id)
+
     fun alternarFavorito(id: String) {
-        if (obtenerSolucion(id) == null) return
-        _uiState.update { estado ->
-            val nuevosFavoritos = estado.favoritos.toMutableSet()
-            if (nuevosFavoritos.contains(id)) {
-                nuevosFavoritos.remove(id)
-            } else {
-                nuevosFavoritos.add(id)
-            }
-            estado.copy(favoritos = nuevosFavoritos)
-        }
+        val estado = _uiState.value
+        if (obtenerSolucion(id) == null || estado.cargando || estado.guardandoFavorito) return
+        val ids = if (id in estado.favoritos) estado.favoritos - id else estado.favoritos + id
+        val mensaje = if (id in ids) "Favorito guardado" else "Favorito eliminado"
+        guardarFavoritos(ids, mensaje)
     }
 
     fun limpiarFavoritos() {
-        _uiState.update { it.copy(favoritos = emptySet()) }
+        guardarFavoritos(emptySet(), "Favoritos eliminados")
+    }
+
+    private fun guardarFavoritos(ids: Set<String>, mensaje: String) {
+        // Sin preferencias, las pruebas locales trabajan solo con el estado en memoria.
+        val repositorio = preferencias
+        if (repositorio == null) {
+            _uiState.update { it.copy(favoritos = ids, mensaje = mensaje) }
+            return
+        }
+        _uiState.update { it.copy(guardandoFavorito = true, mensaje = null) }
+        viewModelScope.launch {
+            try {
+                repositorio.guardarFavoritos(ids)
+                _uiState.update { it.copy(guardandoFavorito = false, mensaje = mensaje) }
+            } catch (_: IOException) {
+                _uiState.update { it.copy(guardandoFavorito = false, mensaje = "No se pudo guardar el cambio. Intenta nuevamente.") }
+            }
+        }
     }
 }

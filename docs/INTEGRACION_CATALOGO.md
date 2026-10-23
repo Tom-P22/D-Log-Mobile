@@ -1,4 +1,6 @@
-# Integración del catálogo en dev
+# Integración inicial del catálogo en dev
+
+Registro de la unión inicial de ramas. Para el estado actual consultar README.md y PRUEBAS.md.
 
 ## Origen y decisiones
 
@@ -46,8 +48,7 @@ Ambas ejecuciones finalizaron con BUILD SUCCESSFUL.
 No se ejecutó este recorrido integrado en emulador ni teléfono desde esta revisión.
 No se implementó autenticación, validación de formularios, persistencia ni cámara.
 
-## Estado de Git al preparar la entrega
+## Historial
 
-El merge queda preparado en dev, sin conflictos, pendiente de commit del usuario.
-No se ha hecho push. Main y la rama remota de Marcelo se conservan.
-Al cerrar el merge con un commit, el historial de Marcelo pasa a formar parte de dev.
+La integración se confirmó mediante el commit 4a011a8, conservando los cuatro
+commits originales de Marcelo. El desarrollo continúa en dev.
