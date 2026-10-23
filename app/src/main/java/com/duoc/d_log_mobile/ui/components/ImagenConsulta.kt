@@ -1,7 +1,6 @@
 package com.duoc.d_log_mobile.ui.components
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.duoc.d_log_mobile.ui.utils.cargarImagenConsulta
 
 @Composable
 fun ImagenConsulta(uri: Uri?) {
@@ -26,15 +26,7 @@ fun ImagenConsulta(uri: Uri?) {
         if (uri != null) {
             value = withContext(Dispatchers.IO) {
                 try {
-                    // Se reduce una foto grande antes de cargarla en memoria.
-                    val opciones = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                    contexto.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, opciones) }
-                    opciones.inSampleSize = 1
-                    while (opciones.outWidth / opciones.inSampleSize > 1200 || opciones.outHeight / opciones.inSampleSize > 1200) {
-                        opciones.inSampleSize *= 2
-                    }
-                    opciones.inJustDecodeBounds = false
-                    contexto.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, opciones) }
+                    cargarImagenConsulta(contexto, uri)
                 } catch (_: java.io.IOException) {
                     null
                 } catch (_: SecurityException) {

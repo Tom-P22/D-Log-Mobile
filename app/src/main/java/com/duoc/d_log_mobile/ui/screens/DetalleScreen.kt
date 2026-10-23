@@ -2,14 +2,11 @@ package com.duoc.d_log_mobile.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.layout.ContentScale
-import com.duoc.d_log_mobile.R
+import com.duoc.d_log_mobile.ui.components.ImagenBosque
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,9 +59,9 @@ fun DetalleScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Image(
-                        painterResource(R.drawable.fondo_bosque), "Imagen de referencia de madera y naturaleza",
-                        Modifier.fillMaxWidth().height(160.dp), contentScale = ContentScale.Crop
+                    ImagenBosque(
+                        modifier = Modifier.fillMaxWidth().height(160.dp),
+                        descripcion = "Imagen de referencia de madera y naturaleza"
                     )
                     Text(
                         text = solucion.nombre,

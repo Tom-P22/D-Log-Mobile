@@ -24,9 +24,11 @@ Los archivos Kotlin están en app/src/main/java/com/duoc/d_log_mobile.
 | ui/screens/ConsultaScreen.kt | Campos, cámara, galería y errores |
 | ui/screens/ResumenScreen.kt | Datos válidos, imagen, edición y finalización |
 | ui/components/PantallaBase.kt | Título, ancho adaptable, espaciado y scroll |
-| ui/components/ImagenConsulta.kt | Lectura reducida y vista previa de la imagen |
+| ui/components/ImagenConsulta.kt | Vista previa con carga fuera del hilo principal y orientación corregida |
+| ui/components/ImagenBosque.kt | Fondo reutilizable cargado a resolución reducida en login y detalle |
 | ui/utils/WindowSizeUtils.kt | Distingue ancho compacto de ventanas más amplias |
-| ui/utils/ImagenUtils.kt | Crea una URI temporal para TakePicture |
+| ui/utils/ImagenUtils.kt | Crea la URI de cámara, reduce imágenes y corrige su orientación EXIF |
+| res/drawable-nodpi/fondo_bosque.png | Imagen original del bosque sin escalado automático por densidad |
 | ui/theme/Theme.kt | Colores de madera y naturaleza, claros y oscuros |
 | res/xml/file_paths.xml | Limita FileProvider a la carpeta imagenes de la caché |
 | AndroidManifest.xml | Actividad inicial y FileProvider privado |
@@ -72,11 +74,24 @@ el guardado, el estado contiene un mensaje para mostrar en pantalla.
 | SolucionViewModel: `obtenerSolucion(id)` | Consulta el repositorio para abrir el detalle |
 | SolucionViewModel: `alternarFavorito(id)` | Agrega o quita un ID válido y solicita el guardado |
 | SolucionViewModel: `limpiarFavoritos()` | Vacía expresamente el conjunto; no se llama al cerrar sesión |
-| SolucionViewModel: `guardarFavoritos(ids, mensaje)` | Función privada que escribe preferencias y actualiza carga o resultado |
+| SolucionViewModel: `guardarFavoritos(ids, mensaje, solucionId)` | Escribe preferencias y asocia el resultado con la ficha que originó la acción |
+| SolucionUiState: `mensajeParaSolucion(id)` | Devuelve el mensaje únicamente para la ficha correspondiente |
 
 `solucionesFiltradas` combina texto y categoría. `solucionesFavoritas` obtiene las
 fichas correspondientes a los IDs guardados. Ambas propiedades están en SolucionUiState.
 `guardandoFavorito` evita escrituras repetidas y `mensaje` informa si se guardó o quitó.
+`mensajeSolucionId` evita mostrar en otra ficha una confirmación o error anterior.
+
+## Carga de imágenes y tipografía
+
+- `cargarFondoBosque(contexto)` utiliza muestreo de 4 y desactiva el escalado por densidad.
+  El fondo de 3000 × 4500 se decodifica a 750 × 1125, aproximadamente 3,2 MiB en RGBA.
+  El archivo original conserva sus dimensiones; solo se reduce la copia en memoria.
+- `cargarImagenConsulta(contexto, uri)` reduce la foto a un máximo de 1200 píxeles por
+  lado y aplica la orientación EXIF, incluyendo rotaciones y reflejos.
+- `ImagenBosque` e `ImagenConsulta` realizan la lectura en Dispatchers.IO.
+- Login usa la tipografía del tema y negrita para el título. Se retiraron los dos archivos
+  Glacial Indifference vacíos; no se requiere descargar fuentes para ejecutar la app.
 
 ## Funciones de consulta e imagen
 

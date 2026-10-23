@@ -40,11 +40,15 @@ Editar conserva los campos; finalizar limpia la consulta y regresa al catálogo.
 ConsultaScreen usa GetContent y TakePicture. La cámara escribe en una URI temporal
 creada con FileProvider. ImagenConsulta decodifica una copia reducida fuera del hilo
 principal para mostrarla en consulta y resumen.
+La lectura aplica también la orientación EXIF de la fotografía. El fondo de Login y
+Detalle usa ImagenBosque, con una copia reducida y sin escalado automático por densidad.
+El login utiliza la tipografía del sistema definida por el tema.
 
 PantallaBase adapta padding y ancho máximo según Window Size Classes. El catálogo
 coloca sus acciones en columna en compacto y en fila cuando hay más espacio.
 El formulario tiene scroll y MainActivity ajusta el contenido al teclado.
 El cambio de favorito anima el color del botón y muestra el resultado al guardar.
+El mensaje se asocia al ID de la ficha para que no aparezca como confirmación en otra.
 
 ## Recorridos de las funciones
 

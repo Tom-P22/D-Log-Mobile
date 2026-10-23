@@ -1,7 +1,6 @@
 package com.duoc.d_log_mobile.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,26 +16,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.duoc.d_log_mobile.R
+import com.duoc.d_log_mobile.ui.components.ImagenBosque
 import com.duoc.d_log_mobile.model.LoginUiState
 import com.duoc.d_log_mobile.ui.utils.esPantallaAncha
-
-private val fuenteLogin = FontFamily(
-    Font(R.font.glacial_indifference_regular, FontWeight.Normal),
-    Font(R.font.glacial_indifference_bold, FontWeight.Bold)
-)
 
 @Composable
 fun LoginScreen(
@@ -49,10 +38,7 @@ fun LoginScreen(
     var mostrarClave by rememberSaveable { mutableStateOf(false) }
     val ancho = esPantallaAncha()
     Box(modifier.fillMaxSize()) {
-        Image(
-            painterResource(R.drawable.fondo_bosque), contentDescription = null,
-            contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()
-        )
+        ImagenBosque(modifier = Modifier.fillMaxSize())
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,8 +54,8 @@ fun LoginScreen(
                     Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("D-Log", style = MaterialTheme.typography.headlineLarge, fontFamily = fuenteLogin)
-                    Text("Soluciones constructivas en madera", textAlign = TextAlign.Center, fontFamily = fuenteLogin)
+                    Text("D-Log", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
+                    Text("Soluciones constructivas en madera", textAlign = TextAlign.Center)
                     OutlinedTextField(
                         value = state.correo, onValueChange = onCorreoChange,
                         label = { Text("Correo electrónico") }, singleLine = true,

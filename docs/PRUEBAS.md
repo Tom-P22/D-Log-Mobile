@@ -1,6 +1,22 @@
 # Pruebas del MVP
 
-## Resultado
+## Correcciones del 23 de octubre de 2026
+
+Se corrigieron la carga excesiva del fondo, la orientación de fotos, el uso de fuentes
+vacías y las confirmaciones de favoritos que aparecían en otra ficha.
+
+Se añadieron dos pruebas unitarias de mensajes por ID y limpieza de confirmaciones,
+y dos instrumentadas: límite de memoria del fondo y las ocho orientaciones EXIF.
+Las pruebas EXIF crean fotografías JPEG temporales y comprueban dimensiones y colores
+para detectar tanto giros como reflejos incorrectos.
+
+Estas nuevas comprobaciones siguen pendientes de ejecución. El intento de compilación,
+pruebas y lint se detuvo en la comunicación del daemon con
+`Unable to establish loopback connection`, incluso usando una ruta temporal corta para
+los sockets Java solo en ese proceso. No se modificó la configuración global del equipo.
+Los resultados siguientes corresponden a la validación anterior a estas correcciones.
+
+## Resultado anterior
 
 - Compilación de depuración: correcta; APK en app/build/outputs/apk/debug/app-debug.apk.
 - Veinte pruebas unitarias aprobadas: cinco de login, seis de catálogo/favoritos,

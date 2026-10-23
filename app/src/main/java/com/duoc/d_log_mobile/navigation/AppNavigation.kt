@@ -82,7 +82,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     onFavorito = { solucionViewModel.alternarFavorito(id) },
                     onVolver = { navController.popBackStack() },
                     guardando = solucionState.guardandoFavorito || solucionState.cargando,
-                    mensaje = solucionState.mensaje
+                    mensaje = solucionState.mensajeParaSolucion(id)
                 )
             }
             composable(Routes.FAVORITOS) {
